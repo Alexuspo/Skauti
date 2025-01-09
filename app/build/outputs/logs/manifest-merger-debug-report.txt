@@ -1,23 +1,24 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:2:1-32:12
-INJECTED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:2:1-32:12
-INJECTED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:2:1-32:12
-INJECTED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:2:1-32:12
+ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:2:1-34:12
+INJECTED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:2:1-34:12
+INJECTED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:2:1-34:12
+INJECTED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:2:1-34:12
 MERGED from [androidx.navigation:navigation-common:2.7.7] C:\Users\Alex\.gradle\caches\8.9\transforms\f3563599ada4ae90b74721c15f462457\transformed\navigation-common-2.7.7\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.navigation:navigation-runtime:2.7.7] C:\Users\Alex\.gradle\caches\8.9\transforms\79452c6244872b4c1f4e7e714575b25d\transformed\navigation-runtime-2.7.7\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.navigation:navigation-common-ktx:2.7.7] C:\Users\Alex\.gradle\caches\8.9\transforms\c9ce7f2840936d3f078803a53817b752\transformed\navigation-common-ktx-2.7.7\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.navigation:navigation-runtime-ktx:2.7.7] C:\Users\Alex\.gradle\caches\8.9\transforms\9fbfe77de717d6952d765c67e885911e\transformed\navigation-runtime-ktx-2.7.7\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.navigation:navigation-compose:2.7.7] C:\Users\Alex\.gradle\caches\8.9\transforms\33cdf2d2188bdfac51077ae8d33ab34b\transformed\navigation-compose-2.7.7\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.compose.material3:material3-android:1.2.0] C:\Users\Alex\.gradle\caches\8.9\transforms\9a19620bef2ec17388f7efd8216f96f6\transformed\material3-release\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.compose.material:material-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\7ddcd8e13292b4745cca3e6364bbc09e\transformed\material-release\AndroidManifest.xml:2:1-7:12
+MERGED from [nl.dionsegijn:konfetti-compose:2.0.4] C:\Users\Alex\.gradle\caches\8.9\transforms\36e817def15051d9f2c653457a2c34f3\transformed\konfetti-compose-2.0.4\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.material:material-ripple-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\d89e5662ab29d7e0b7cece5b2406a427\transformed\material-ripple-release\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.compose.material:material-icons-core-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\a98fa5352298284afe662bc67094fb8e\transformed\material-icons-core-release\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.compose.material:material-icons-extended-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\da57525cea26fec8e2f4cd1fb08bb33c\transformed\material-icons-extended-release\AndroidManifest.xml:2:1-7:12
-MERGED from [androidx.compose.material:material-ripple-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\d89e5662ab29d7e0b7cece5b2406a427\transformed\material-ripple-release\AndroidManifest.xml:2:1-7:12
-MERGED from [androidx.compose.foundation:foundation-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\370ac8d4fb9995e07f49bf7abd5ade0b\transformed\foundation-release\AndroidManifest.xml:2:1-7:12
-MERGED from [androidx.compose.foundation:foundation-layout-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\e9ca78f137ec455e961d8894e205155a\transformed\foundation-layout-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.material:material-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\7ddcd8e13292b4745cca3e6364bbc09e\transformed\material-release\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.compose.animation:animation-core-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\391e738aab97fe22a55ff410b7db849e\transformed\animation-core-release\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.compose.animation:animation-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\351663a41335008b17b388117fb13646\transformed\animation-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.foundation:foundation-layout-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\e9ca78f137ec455e961d8894e205155a\transformed\foundation-layout-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.foundation:foundation-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\370ac8d4fb9995e07f49bf7abd5ade0b\transformed\foundation-release\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.compose.ui:ui-tooling-data-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\72316dc022e908a7b9e767280827ec10\transformed\ui-tooling-data-release\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.compose.ui:ui-unit-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\816b9a2591afb351409ae507c00d4ce7\transformed\ui-unit-release\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.compose.ui:ui-geometry-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\e5ac4bc33f6ea58252d8f44e8b2368cc\transformed\ui-geometry-release\AndroidManifest.xml:2:1-7:12
@@ -46,6 +47,7 @@ MERGED from [androidx.autofill:autofill:1.0.0] C:\Users\Alex\.gradle\caches\8.9\
 MERGED from [androidx.core:core:1.12.0] C:\Users\Alex\.gradle\caches\8.9\transforms\9c3c079d560884557f85a9d2c830be03\transformed\core-1.12.0\AndroidManifest.xml:17:1-30:12
 MERGED from [androidx.customview:customview-poolingcontainer:1.0.0] C:\Users\Alex\.gradle\caches\8.9\transforms\29143b61737bf9176613a948427bb5f6\transformed\customview-poolingcontainer-1.0.0\AndroidManifest.xml:17:1-23:12
 MERGED from [androidx.core:core-ktx:1.12.0] C:\Users\Alex\.gradle\caches\8.9\transforms\452c50c017fd1c98cefb5523cd5646e9\transformed\core-ktx-1.12.0\AndroidManifest.xml:2:1-7:12
+MERGED from [nl.dionsegijn:konfetti-core:2.0.4] C:\Users\Alex\.gradle\caches\8.9\transforms\f777db4f598de829a53d5ad08c0e8fda\transformed\konfetti-core-2.0.4\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.compose.runtime:runtime-saveable-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\c7dcf28c231127034a2a9abc7a5d3395\transformed\runtime-saveable-release\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.compose.runtime:runtime-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\f54a52813f7118f25f94e5ead68e301d\transformed\runtime-release\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.annotation:annotation-experimental:1.4.0] C:\Users\Alex\.gradle\caches\8.9\transforms\c1f68aab084a9a4cb06c8bfd289d88cb\transformed\annotation-experimental-1.4.0\AndroidManifest.xml:2:1-7:12
@@ -80,9 +82,17 @@ ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManife
 		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:7:79-105
 	android:name
 		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:7:22-78
+uses-permission#android.permission.ACCESS_FINE_LOCATION
+ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:8:5-78
+	android:name
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:8:22-76
+uses-permission#android.permission.ACCESS_COARSE_LOCATION
+ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:9:5-80
+	android:name
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:9:22-78
 application
-ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:9:5-30:19
-INJECTED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:9:5-30:19
+ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:11:5-32:19
+INJECTED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:11:5-32:19
 MERGED from [androidx.emoji2:emoji2:1.3.0] C:\Users\Alex\.gradle\caches\8.9\transforms\b7764017caa3d961e659a5f05fe6d7c1\transformed\emoji2-1.3.0\AndroidManifest.xml:23:5-33:19
 MERGED from [androidx.emoji2:emoji2:1.3.0] C:\Users\Alex\.gradle\caches\8.9\transforms\b7764017caa3d961e659a5f05fe6d7c1\transformed\emoji2-1.3.0\AndroidManifest.xml:23:5-33:19
 MERGED from [androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\Alex\.gradle\caches\8.9\transforms\9f26235e72742da5cbc4aae1d732f89d\transformed\lifecycle-process-2.7.0\AndroidManifest.xml:23:5-33:19
@@ -104,43 +114,43 @@ MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\Alex\.gradle\cache
 	android:appComponentFactory
 		ADDED from [androidx.core:core:1.12.0] C:\Users\Alex\.gradle\caches\8.9\transforms\9c3c079d560884557f85a9d2c830be03\transformed\core-1.12.0\AndroidManifest.xml:28:18-86
 	android:supportsRtl
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:16:9-35
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:18:9-35
 	android:label
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:14:9-41
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:16:9-41
 	android:fullBackupContent
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:12:9-54
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:14:9-54
 	android:roundIcon
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:15:9-54
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:17:9-54
 	tools:targetApi
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:18:9-29
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:20:9-29
 	android:icon
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:13:9-43
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:15:9-43
 	android:allowBackup
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:10:9-35
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:12:9-35
 	android:theme
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:17:9-44
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:19:9-44
 	android:dataExtractionRules
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:11:9-65
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:13:9-65
 activity#alexus.studio.skauti.MainActivity
-ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:19:9-29:20
+ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:21:9-31:20
 	android:label
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:22:13-45
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:24:13-45
 	android:exported
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:21:13-36
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:23:13-36
 	android:theme
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:23:13-48
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:25:13-48
 	android:name
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:20:13-41
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:22:13-41
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:24:13-28:29
+ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:26:13-30:29
 action#android.intent.action.MAIN
-ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:25:17-69
+ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:27:17-69
 	android:name
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:25:25-66
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:27:25-66
 category#android.intent.category.LAUNCHER
-ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:27:17-77
+ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:29:17-77
 	android:name
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:27:27-74
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:29:27-74
 uses-sdk
 INJECTED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml
@@ -157,22 +167,24 @@ MERGED from [androidx.navigation:navigation-compose:2.7.7] C:\Users\Alex\.gradle
 MERGED from [androidx.navigation:navigation-compose:2.7.7] C:\Users\Alex\.gradle\caches\8.9\transforms\33cdf2d2188bdfac51077ae8d33ab34b\transformed\navigation-compose-2.7.7\AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.material3:material3-android:1.2.0] C:\Users\Alex\.gradle\caches\8.9\transforms\9a19620bef2ec17388f7efd8216f96f6\transformed\material3-release\AndroidManifest.xml:20:5-44
 MERGED from [androidx.compose.material3:material3-android:1.2.0] C:\Users\Alex\.gradle\caches\8.9\transforms\9a19620bef2ec17388f7efd8216f96f6\transformed\material3-release\AndroidManifest.xml:20:5-44
-MERGED from [androidx.compose.material:material-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\7ddcd8e13292b4745cca3e6364bbc09e\transformed\material-release\AndroidManifest.xml:5:5-44
-MERGED from [androidx.compose.material:material-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\7ddcd8e13292b4745cca3e6364bbc09e\transformed\material-release\AndroidManifest.xml:5:5-44
+MERGED from [nl.dionsegijn:konfetti-compose:2.0.4] C:\Users\Alex\.gradle\caches\8.9\transforms\36e817def15051d9f2c653457a2c34f3\transformed\konfetti-compose-2.0.4\AndroidManifest.xml:5:5-44
+MERGED from [nl.dionsegijn:konfetti-compose:2.0.4] C:\Users\Alex\.gradle\caches\8.9\transforms\36e817def15051d9f2c653457a2c34f3\transformed\konfetti-compose-2.0.4\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.material:material-ripple-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\d89e5662ab29d7e0b7cece5b2406a427\transformed\material-ripple-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.material:material-ripple-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\d89e5662ab29d7e0b7cece5b2406a427\transformed\material-ripple-release\AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.material:material-icons-core-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\a98fa5352298284afe662bc67094fb8e\transformed\material-icons-core-release\AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.material:material-icons-core-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\a98fa5352298284afe662bc67094fb8e\transformed\material-icons-core-release\AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.material:material-icons-extended-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\da57525cea26fec8e2f4cd1fb08bb33c\transformed\material-icons-extended-release\AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.material:material-icons-extended-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\da57525cea26fec8e2f4cd1fb08bb33c\transformed\material-icons-extended-release\AndroidManifest.xml:5:5-44
-MERGED from [androidx.compose.material:material-ripple-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\d89e5662ab29d7e0b7cece5b2406a427\transformed\material-ripple-release\AndroidManifest.xml:5:5-44
-MERGED from [androidx.compose.material:material-ripple-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\d89e5662ab29d7e0b7cece5b2406a427\transformed\material-ripple-release\AndroidManifest.xml:5:5-44
-MERGED from [androidx.compose.foundation:foundation-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\370ac8d4fb9995e07f49bf7abd5ade0b\transformed\foundation-release\AndroidManifest.xml:5:5-44
-MERGED from [androidx.compose.foundation:foundation-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\370ac8d4fb9995e07f49bf7abd5ade0b\transformed\foundation-release\AndroidManifest.xml:5:5-44
-MERGED from [androidx.compose.foundation:foundation-layout-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\e9ca78f137ec455e961d8894e205155a\transformed\foundation-layout-release\AndroidManifest.xml:5:5-44
-MERGED from [androidx.compose.foundation:foundation-layout-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\e9ca78f137ec455e961d8894e205155a\transformed\foundation-layout-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.material:material-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\7ddcd8e13292b4745cca3e6364bbc09e\transformed\material-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.material:material-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\7ddcd8e13292b4745cca3e6364bbc09e\transformed\material-release\AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.animation:animation-core-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\391e738aab97fe22a55ff410b7db849e\transformed\animation-core-release\AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.animation:animation-core-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\391e738aab97fe22a55ff410b7db849e\transformed\animation-core-release\AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.animation:animation-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\351663a41335008b17b388117fb13646\transformed\animation-release\AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.animation:animation-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\351663a41335008b17b388117fb13646\transformed\animation-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.foundation:foundation-layout-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\e9ca78f137ec455e961d8894e205155a\transformed\foundation-layout-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.foundation:foundation-layout-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\e9ca78f137ec455e961d8894e205155a\transformed\foundation-layout-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.foundation:foundation-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\370ac8d4fb9995e07f49bf7abd5ade0b\transformed\foundation-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.foundation:foundation-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\370ac8d4fb9995e07f49bf7abd5ade0b\transformed\foundation-release\AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.ui:ui-tooling-data-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\72316dc022e908a7b9e767280827ec10\transformed\ui-tooling-data-release\AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.ui:ui-tooling-data-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\72316dc022e908a7b9e767280827ec10\transformed\ui-tooling-data-release\AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.ui:ui-unit-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\816b9a2591afb351409ae507c00d4ce7\transformed\ui-unit-release\AndroidManifest.xml:5:5-44
@@ -229,6 +241,8 @@ MERGED from [androidx.customview:customview-poolingcontainer:1.0.0] C:\Users\Ale
 MERGED from [androidx.customview:customview-poolingcontainer:1.0.0] C:\Users\Alex\.gradle\caches\8.9\transforms\29143b61737bf9176613a948427bb5f6\transformed\customview-poolingcontainer-1.0.0\AndroidManifest.xml:20:5-21:38
 MERGED from [androidx.core:core-ktx:1.12.0] C:\Users\Alex\.gradle\caches\8.9\transforms\452c50c017fd1c98cefb5523cd5646e9\transformed\core-ktx-1.12.0\AndroidManifest.xml:5:5-44
 MERGED from [androidx.core:core-ktx:1.12.0] C:\Users\Alex\.gradle\caches\8.9\transforms\452c50c017fd1c98cefb5523cd5646e9\transformed\core-ktx-1.12.0\AndroidManifest.xml:5:5-44
+MERGED from [nl.dionsegijn:konfetti-core:2.0.4] C:\Users\Alex\.gradle\caches\8.9\transforms\f777db4f598de829a53d5ad08c0e8fda\transformed\konfetti-core-2.0.4\AndroidManifest.xml:5:5-44
+MERGED from [nl.dionsegijn:konfetti-core:2.0.4] C:\Users\Alex\.gradle\caches\8.9\transforms\f777db4f598de829a53d5ad08c0e8fda\transformed\konfetti-core-2.0.4\AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.runtime:runtime-saveable-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\c7dcf28c231127034a2a9abc7a5d3395\transformed\runtime-saveable-release\AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.runtime:runtime-saveable-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\c7dcf28c231127034a2a9abc7a5d3395\transformed\runtime-saveable-release\AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.runtime:runtime-android:1.6.1] C:\Users\Alex\.gradle\caches\8.9\transforms\f54a52813f7118f25f94e5ead68e301d\transformed\runtime-release\AndroidManifest.xml:5:5-44

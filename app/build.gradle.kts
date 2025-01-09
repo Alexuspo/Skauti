@@ -70,4 +70,5 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation("org.osmdroid:osmdroid-android:6.1.18")
+    implementation("nl.dionsegijn:konfetti-compose:2.0.4")
 }

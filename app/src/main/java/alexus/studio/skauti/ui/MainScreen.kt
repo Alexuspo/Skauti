@@ -1,44 +1,53 @@
 package alexus.studio.skauti.ui
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Article
-import androidx.compose.material.icons.filled.PhotoLibrary
-import androidx.compose.material.icons.filled.Contacts
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Group
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Map
-import androidx.compose.material3.*
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.AlertDialog as Dialog
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.remember
-import androidx.compose.material3.ButtonDefaults
-import alexus.studio.skauti.R
-import java.time.LocalDate
-import androidx.compose.animation.*
-import androidx.compose.animation.core.*
 import android.content.Intent
 import android.net.Uri
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.layout.ContentScale
+import alexus.studio.skauti.R
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.animation.core.*
+import androidx.compose.foundation.Canvas
+import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.Color
+import kotlin.random.Random
+import kotlinx.coroutines.delay
 
 // Přidáme novou data třídu pro události
 data class Event(
@@ -207,7 +216,7 @@ fun MainScreen(
             composable("home") { HomeScreen() }
             composable("calendar") { CalendarScreen() }
             composable("troops") { TroopsScreen() }
-            composable("about") { AboutScreen() }
+            composable("about") { AboutScreen(isDarkTheme, onThemeChanged) }
             composable("map") { MapScreen() }
         }
     }
@@ -452,56 +461,24 @@ fun CalendarScreen() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AboutScreen() {
+fun AboutScreen(isDarkTheme: Boolean, onThemeChanged: (Boolean) -> Unit) {
+    var showBirthdayDialog by remember { mutableStateOf(false) }
+    var clickCount by remember { mutableStateOf(0) }
+    
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(16.dp)
     ) {
         item {
             Text(
                 "O oddílu",
                 style = MaterialTheme.typography.headlineMedium,
-                modifier = Modifier.padding(bottom = 24.dp)
+                modifier = Modifier.padding(bottom = 16.dp)
             )
 
-            // Informační karta
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 24.dp)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    Text(
-                        "O nás",
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.padding(bottom = 8.dp)
-                    )
-                    
-                    Text(
-                        "Jsme chlapecký oddíl z křesťanského střediska Ichthys s více než dvacetipětiletou historií.",
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                    
-                    Text(
-                        "Klubovnu máme v Plzni na Slovanech v areálu dominikánského kláštera, kde probíhají jednotlivé schůzky družin, turnaje v deskových hrách či sportovní aktivity a podobně.",
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                    
-                    Text(
-                        "Přibližně jednou za měsíc pořádáme jednodenní výpravy do přírody, občas se vydáme na vícedenní akci a o prázdninách nás čeká tábor na louce u říčky Úhlavky nedaleko Kladrub.",
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                }
-            }
-
-            // Kontaktní karta
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -510,46 +487,181 @@ fun AboutScreen() {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .padding(16.dp)
                 ) {
                     Text(
-                        "Kontakt",
+                        text = "O oddílu",
                         style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.padding(bottom = 16.dp)
-                    )
-
-                    Image(
-                        painter = painterResource(id = R.drawable.paja),
-                        contentDescription = "Vedoucí oddílu",
-                        modifier = Modifier
-                            .size(200.dp)
-                            .padding(bottom = 16.dp),
-                        contentScale = ContentScale.Crop
-                    )
-
-                    Text(
-                        "Vedoucí oddílu",
-                        style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.padding(bottom = 8.dp)
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(bottom = 12.dp)
                     )
                     
                     Text(
-                        "Pavel Balda",
+                        text = "Jsme chlapecký oddíl z křesťanského střediska Ichthys s více než dvacetipětiletou historií.",
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
                     
                     Text(
-                        "tel: 777 362 036",
+                        text = "Klubovnu máme v Plzni na Slovanech v areálu dominikánského kláštera, kde probíhají jednotlivé " +
+                              "schůzky družin, turnaje v deskových hrách či sportovní aktivity a podobně.",
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
                     
                     Text(
-                        "pardi@skaut.cz",
+                        text = "Přibližně jednou za měsíc pořádáme jednodenní výpravy do přírody, občas se vydáme na vícedenní " +
+                              "akci a o prázdninách nás čeká tábor na louce u říčky Úhlavky nedaleko Kladrub.",
                         style = MaterialTheme.typography.bodyLarge
                     )
+                }
+            }
+
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    Text(
+                        text = "Kontaktní informace",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(bottom = 12.dp)
+                    )
+                    
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        // Levá strana s kontaktními informacemi
+                        Column(
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(
+                                text = "Vedoucí oddílu",
+                                style = MaterialTheme.typography.titleMedium,
+                                modifier = Modifier.padding(bottom = 8.dp)
+                            )
+                            
+                            Text(
+                                text = "Pavel Balda",
+                                style = MaterialTheme.typography.bodyLarge,
+                                modifier = Modifier.padding(bottom = 4.dp)
+                            )
+                            
+                            Row(
+                                modifier = Modifier.padding(bottom = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    Icons.Default.Phone,
+                                    contentDescription = "Telefon",
+                                    modifier = Modifier.padding(end = 8.dp),
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                                Text(
+                                    text = "777 362 036",
+                                    style = MaterialTheme.typography.bodyLarge
+                                )
+                            }
+                            
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    Icons.Default.Email,
+                                    contentDescription = "Email",
+                                    modifier = Modifier.padding(end = 8.dp),
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                                Text(
+                                    text = "pardi@skaut.cz",
+                                    style = MaterialTheme.typography.bodyLarge
+                                )
+                            }
+                        }
+                        
+                        // Pravá strana s obrázkem
+                        Image(
+                            painter = painterResource(id = R.drawable.paja),
+                            contentDescription = "Vedoucí oddílu",
+                            modifier = Modifier
+                                .size(150.dp)
+                                .padding(start = 16.dp)
+                                .clickable {
+                                    clickCount++
+                                    if (clickCount >= 3) {
+                                        showBirthdayDialog = true
+                                        clickCount = 0
+                                    }
+                                }
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    if (showBirthdayDialog) {
+        Dialog(onDismissRequest = { showBirthdayDialog = false }) {
+            Surface(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .wrapContentSize()
+                    .size(300.dp),  // Omezená velikost dialogu
+                shape = MaterialTheme.shapes.medium,
+                color = MaterialTheme.colorScheme.surface
+            ) {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    BirthdayConfetti()
+                    
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            "🎂 Odpočet do narozenin 🎂",
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.padding(bottom = 8.dp),
+                            textAlign = TextAlign.Center
+                        )
+                        
+                        val currentDate = LocalDate.now()
+                        val birthdayThisYear = LocalDate.of(
+                            currentDate.year + if (currentDate.monthValue > 4 || 
+                                (currentDate.monthValue == 4 && currentDate.dayOfMonth > 27)) 1 else 0, 
+                            4, 
+                            27
+                        )
+                        val daysUntilBirthday = ChronoUnit.DAYS.between(currentDate, birthdayThisYear)
+
+                        Text(
+                            "$daysUntilBirthday",
+                            style = MaterialTheme.typography.displayMedium,
+                            color = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.padding(vertical = 4.dp)
+                        )
+
+                        Text(
+                            if(daysUntilBirthday == 1L) "den" else "dní",
+                            style = MaterialTheme.typography.titleSmall
+                        )
+                        
+                        Button(
+                            onClick = { showBirthdayDialog = false },
+                            modifier = Modifier.padding(top = 8.dp)
+                        ) {
+                            Text("Zavřít")
+                        }
+                    }
                 }
             }
         }
@@ -685,4 +797,66 @@ private fun TroopCard(name: String, time: String, leaders: List<String>) {
 @Composable
 fun MainScreenPreview() {
     MainScreen(false, {})
-} 
+}
+
+@Composable
+fun BirthdayConfetti() {
+    val particles = remember { mutableStateListOf<Particle>() }
+    val infiniteTransition = rememberInfiniteTransition()
+    
+    // Inicializace částic - rozprostřeme je po celé šířce
+    LaunchedEffect(Unit) {
+        repeat(50) {
+            particles.add(
+                Particle(
+                    x = Random.nextFloat() * 1000,  // Zvětšíme rozsah pro x
+                    y = Random.nextFloat() * -1000,  // Začneme více nad horním okrajem
+                    color = listOf(
+                        Color(0xFFFF1744),  // Červená
+                        Color(0xFFFFD700),  // Zlatá
+                        Color(0xFF00E676),  // Zelená
+                        Color(0xFF2979FF),  // Modrá
+                        Color(0xFFFF4081),  // Růžová
+                        Color(0xFFFFEB3B)   // Žlutá
+                    ).random(),
+                    speed = Random.nextFloat() * 3 + 0.5f  // Větší rozsah rychlostí
+                )
+            )
+        }
+    }
+
+    // Animace pozice - prodloužíme dobu animace
+    val animatedPosition by infiniteTransition.animateFloat(
+        initialValue = -1000f,
+        targetValue = 1000f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(3000, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        )
+    )
+
+    Canvas(modifier = Modifier.fillMaxSize()) {
+        particles.forEach { particle ->
+            // Upravíme výpočet pozice pro plynulejší pohyb
+            val yPos = (particle.y + (animatedPosition * particle.speed)) % (size.height + 1000)
+            val xPos = (particle.x) % size.width
+            
+            drawCircle(
+                color = particle.color,
+                radius = 3f,  // Menší částice pro lepší vzhled
+                center = androidx.compose.ui.geometry.Offset(
+                    if (xPos < 0) size.width + xPos else xPos,
+                    if (yPos < 0) size.height + yPos else yPos
+                )
+            )
+        }
+    }
+}
+
+// Upravená data třída pro částice
+private data class Particle(
+    val x: Float,
+    val y: Float,
+    val color: Color,
+    val speed: Float  // Přidáme rychlost pro různou rychlost pádu
+) 
