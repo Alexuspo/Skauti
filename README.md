@@ -3,7 +3,7 @@
 
 Jednoduchá aplikace pro skautský oddíl a nadcházejícími akcemi družinek a dálších věcí.
 
-Aplikace je open-source takže všechny informace o ní jsou zde 
+Aplikace je open-source takže všechny informace o ní a jak funguje jsou zde 
 
 
 ## Co se chystá:
