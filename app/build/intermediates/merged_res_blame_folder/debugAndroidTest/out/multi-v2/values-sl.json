@@ -4,7 +4,7 @@
             "outputFile": "alexus.studio.skauti.test.app-mergeDebugAndroidTestResources-32:/values-sl/values-sl.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Alex\\.gradle\\caches\\8.9\\transforms\\77f4c52fa3b02ea2e1c2ee71a9245d0b\\transformed\\ui-release\\res\\values-sl\\values-sl.xml",
+                    "source": "C:\\Users\\Alex\\.gradle\\caches\\8.9\\transforms\\fc2e035a86b853c7f0b3e66361c365e3\\transformed\\ui-release\\res\\values-sl\\values-sl.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -21,7 +21,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\Alex\\.gradle\\caches\\8.9\\transforms\\9c3c079d560884557f85a9d2c830be03\\transformed\\core-1.12.0\\res\\values-sl\\values-sl.xml",
+                    "source": "C:\\Users\\Alex\\.gradle\\caches\\8.9\\transforms\\f65ba5f0ee565e076916b5030204b88b\\transformed\\core-1.12.0\\res\\values-sl\\values-sl.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",

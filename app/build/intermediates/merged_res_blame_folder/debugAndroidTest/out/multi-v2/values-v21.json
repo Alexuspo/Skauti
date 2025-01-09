@@ -4,26 +4,7 @@
             "outputFile": "alexus.studio.skauti.test.app-mergeDebugAndroidTestResources-32:/values-v21/values-v21.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Alex\\.gradle\\caches\\8.9\\transforms\\dec8eb393582410d322531bf729dcca2\\transformed\\core-1.5.0\\res\\values-v21\\values.xml",
-                    "from": {
-                        "startLines": "4,13",
-                        "startColumns": "0,0",
-                        "startOffsets": "180,655",
-                        "endLines": "12,21",
-                        "endColumns": "8,8",
-                        "endOffsets": "654,1127"
-                    },
-                    "to": {
-                        "startLines": "10,19",
-                        "startColumns": "4,4",
-                        "startOffsets": "864,1343",
-                        "endLines": "18,27",
-                        "endColumns": "8,8",
-                        "endOffsets": "1338,1815"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\Alex\\.gradle\\caches\\8.9\\transforms\\9c3c079d560884557f85a9d2c830be03\\transformed\\core-1.12.0\\res\\values-v21\\values-v21.xml",
+                    "source": "C:\\Users\\Alex\\.gradle\\caches\\8.9\\transforms\\f65ba5f0ee565e076916b5030204b88b\\transformed\\core-1.12.0\\res\\values-v21\\values-v21.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,13",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4",
@@ -39,6 +20,25 @@
                         "endLines": "2,3,4,5,6,7,8,9,30,35",
                         "endColumns": "117,63,66,63,115,125,125,127,12,12",
                         "endOffsets": "168,232,299,363,479,605,731,859,1987,2339"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\Alex\\.gradle\\caches\\8.9\\transforms\\6eacb46d3a5fb1f3296c133eaa5db8ee\\transformed\\core-1.5.0\\res\\values-v21\\values.xml",
+                    "from": {
+                        "startLines": "4,13",
+                        "startColumns": "0,0",
+                        "startOffsets": "180,655",
+                        "endLines": "12,21",
+                        "endColumns": "8,8",
+                        "endOffsets": "654,1127"
+                    },
+                    "to": {
+                        "startLines": "10,19",
+                        "startColumns": "4,4",
+                        "startOffsets": "864,1343",
+                        "endLines": "18,27",
+                        "endColumns": "8,8",
+                        "endOffsets": "1338,1815"
                     }
                 }
             ]
