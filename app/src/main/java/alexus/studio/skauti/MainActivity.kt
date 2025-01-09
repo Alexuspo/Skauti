@@ -17,13 +17,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import alexus.studio.skauti.ui.MainScreen
 import alexus.studio.skauti.ui.theme.SkautiTheme
+import alexus.studio.skauti.utils.ThemePreferences
 
 class MainActivity : ComponentActivity() {
+    private lateinit var themePreferences: ThemePreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        themePreferences = ThemePreferences(this)
+        
         enableEdgeToEdge()
         setContent {
-            var darkTheme by remember { mutableStateOf(false) }
+            // Načteme uložené téma při startu
+            var darkTheme by remember { mutableStateOf(themePreferences.isDarkTheme()) }
             
             SkautiTheme(darkTheme = darkTheme) {
                 Surface(
@@ -32,7 +38,11 @@ class MainActivity : ComponentActivity() {
                 ) {
                     MainScreen(
                         isDarkTheme = darkTheme,
-                        onThemeChanged = { darkTheme = it }
+                        onThemeChanged = { newTheme -> 
+                            darkTheme = newTheme
+                            // Uložíme změnu tématu
+                            themePreferences.setDarkTheme(newTheme)
+                        }
                     )
                 }
             }
