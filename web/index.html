@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Správa skautských událostí</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: none;
+        }
+        .login-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="date"],
+        input[type="password"],
+        input[type="url"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .events-list {
+            margin-top: 20px;
+        }
+        .event-item {
+            border: 1px solid #ddd;
+            padding: 16px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        .registration-controls {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #4CAF50;
+        }
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        .events-tabs {
+            margin: 20px 0;
+            border-bottom: 2px solid #ddd;
+        }
+        .tab-button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 16px;
+            color: #666;
+        }
+        .tab-button.active {
+            color: #4CAF50;
+            border-bottom: 2px solid #4CAF50;
+            margin-bottom: -2px;
+        }
+        .tab-button:hover {
+            color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div id="loginPopup" class="login-popup">
+        <h2>Přihlášení</h2>
+        <div class="form-group">
+            <label for="password">Heslo:</label>
+            <input type="password" id="password">
+        </div>
+        <button onclick="login()">Přihlásit</button>
+    </div>
+
+    <div id="mainContent" class="container">
+        <h1>Správa skautských událostí</h1>
+        
+        <div class="form-group">
+            <h2>Přidat novou událost</h2>
+            <label for="eventName">Název události:</label>
+            <input type="text" id="eventName">
+        </div>
+        <div class="form-group">
+            <label for="eventDate">Datum:</label>
+            <input type="text" id="eventDate" placeholder="např. 6.9.2024 - 7.9.2024">
+        </div>
+        <div class="form-group">
+            <label for="eventParticipants">Účastníci:</label>
+            <input type="text" id="eventParticipants">
+        </div>
+        <div class="form-group">
+            <label for="sortDate">Datum pro řazení:</label>
+            <input type="date" id="sortDate">
+        </div>
+        <div class="form-group">
+            <label for="registrationLink">Odkaz na přihlašování (Google Sheets):</label>
+            <input type="url" id="registrationLink" placeholder="https://docs.google.com/spreadsheets/...">
+        </div>
+        <div class="form-group">
+            <label>
+                <input type="checkbox" id="registrationEnabled">
+                Povolit přihlašování
+            </label>
+        </div>
+        <button onclick="addEvent()">Přidat událost</button>
+
+        <div class="events-tabs">
+            <button id="upcomingTab" class="tab-button active" onclick="switchTab('upcoming')">Nadcházející akce</button>
+            <button id="pastTab" class="tab-button" onclick="switchTab('past')">Proběhlé akce</button>
+        </div>
+
+        <div id="upcomingEvents" class="events-list">
+            <h2>Nadcházející akce</h2>
+        </div>
+
+        <div id="pastEvents" class="events-list" style="display: none;">
+            <h2>Proběhlé akce</h2>
+        </div>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDWBEbxMDLEA4m6Qr_fLgVL5QjqBkF-Ixk",
+            authDomain: "skauti-app.firebaseapp.com",
+            databaseURL: "https://skauti-app-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "skauti-app",
+            storageBucket: "skauti-app.appspot.com",
+            messagingSenderId: "1048869132786",
+            appId: "1:1048869132786:web:e5f0cad2b9d9c3b6c6c0c1"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        const ADMIN_PASSWORD = "ichthys42";
+
+        function login() {
+            const password = document.getElementById('password').value;
+            if (password === ADMIN_PASSWORD) {
+                document.getElementById('loginPopup').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+                loadEvents();
+            } else {
+                alert('Nesprávné heslo!');
+            }
+        }
+
+        function switchTab(tab) {
+            const upcomingTab = document.getElementById('upcomingTab');
+            const pastTab = document.getElementById('pastTab');
+            const upcomingEvents = document.getElementById('upcomingEvents');
+            const pastEvents = document.getElementById('pastEvents');
+
+            if (tab === 'upcoming') {
+                upcomingTab.classList.add('active');
+                pastTab.classList.remove('active');
+                upcomingEvents.style.display = 'block';
+                pastEvents.style.display = 'none';
+            } else {
+                upcomingTab.classList.remove('active');
+                pastTab.classList.add('active');
+                upcomingEvents.style.display = 'none';
+                pastEvents.style.display = 'block';
+            }
+        }
+
+        function addEvent() {
+            const name = document.getElementById('eventName').value;
+            const date = document.getElementById('eventDate').value;
+            const participants = document.getElementById('eventParticipants').value;
+            const eventDate = document.getElementById('sortDate').value;
+            const registrationLink = document.getElementById('registrationLink').value;
+            const registrationEnabled = document.getElementById('registrationEnabled').checked;
+
+            if (!name || !date || !participants || !eventDate) {
+                alert('Prosím vyplňte všechna povinná pole!');
+                return;
+            }
+
+            const newEvent = {
+                name: name,
+                date: date,
+                participants: participants,
+                eventDate: eventDate,
+                registrationLink: registrationLink,
+                registrationEnabled: registrationEnabled
+            };
+
+            database.ref('events').push(newEvent)
+                .then(() => {
+                    alert('Událost byla úspěšně přidána!');
+                    clearForm();
+                    loadEvents();
+                })
+                .catch((error) => {
+                    alert('Chyba při ukládání události: ' + error.message);
+                });
+        }
+
+        function clearForm() {
+            document.getElementById('eventName').value = '';
+            document.getElementById('eventDate').value = '';
+            document.getElementById('eventParticipants').value = '';
+            document.getElementById('sortDate').value = '';
+            document.getElementById('registrationLink').value = '';
+            document.getElementById('registrationEnabled').checked = false;
+        }
+
+        function loadEvents() {
+            const eventsRef = database.ref('events');
+            eventsRef.orderByChild('eventDate').on('value', (snapshot) => {
+                const upcomingList = document.getElementById('upcomingEvents');
+                const pastList = document.getElementById('pastEvents');
+                
+                upcomingList.innerHTML = '<h2>Nadcházející akce</h2>';
+                pastList.innerHTML = '<h2>Proběhlé akce</h2>';
+                
+                const events = [];
+                snapshot.forEach((childSnapshot) => {
+                    events.push({
+                        id: childSnapshot.key,
+                        ...childSnapshot.val()
+                    });
+                });
+
+                const currentDate = new Date().toISOString().split('T')[0];
+                const upcomingEvents = events.filter(e => e.eventDate >= currentDate);
+                const pastEvents = events.filter(e => e.eventDate < currentDate);
+
+                upcomingEvents.sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate));
+                pastEvents.sort((a, b) => new Date(b.eventDate) - new Date(a.eventDate));
+
+                function createEventElement(event) {
+                    const eventElement = document.createElement('div');
+                    eventElement.className = 'event-item';
+                    eventElement.innerHTML = `
+                        <h3>${event.name}</h3>
+                        <p>Datum: ${event.date}</p>
+                        <p>Účastníci: ${event.participants}</p>
+                        <div class="registration-controls">
+                            <p>
+                                <label>Odkaz na přihlašování (Google Sheets):</label>
+                                <input type="url" value="${event.registrationLink || ''}" 
+                                    onchange="updateRegistrationLink('${event.id}', this.value)"
+                                    placeholder="https://docs.google.com/spreadsheets/...">
+                            </p>
+                            <p>
+                                <label class="switch">
+                                    <input type="checkbox" 
+                                        ${event.registrationEnabled ? 'checked' : ''} 
+                                        onchange="updateRegistrationStatus('${event.id}', this.checked)">
+                                    <span class="slider"></span>
+                                </label>
+                                <span style="margin-left: 10px;">Přihlašování ${event.registrationEnabled ? 'povoleno' : 'zakázáno'}</span>
+                            </p>
+                        </div>
+                        <button onclick="deleteEvent('${event.id}')">Smazat</button>
+                    `;
+                    return eventElement;
+                }
+
+                upcomingEvents.forEach(event => {
+                    upcomingList.appendChild(createEventElement(event));
+                });
+
+                pastEvents.forEach(event => {
+                    pastList.appendChild(createEventElement(event));
+                });
+            });
+        }
+
+        function updateRegistrationLink(eventId, newLink) {
+            database.ref('events/' + eventId).update({
+                registrationLink: newLink
+            });
+        }
+
+        function updateRegistrationStatus(eventId, enabled) {
+            database.ref('events/' + eventId).update({
+                registrationEnabled: enabled
+            });
+        }
+
+        function deleteEvent(eventId) {
+            if (confirm('Opravdu chcete smazat tuto událost?')) {
+                database.ref('events/' + eventId).remove()
+                    .then(() => {
+                        alert('Událost byla smazána!');
+                    })
+                    .catch((error) => {
+                        alert('Chyba při mazání události: ' + error.message);
+                    });
+            }
+        }
+    </script>
+</body>
+</html> 

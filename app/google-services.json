@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "67742684224",
+    "project_id": "skauti-app",
+    "storage_bucket": "skauti-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:67742684224:android:6026c8f985ac44961efba5",
+        "android_client_info": {
+          "package_name": "alexus.studio.skauti"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlLiRa16onZllRg3oHdbxVp06HYOfEo4M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
