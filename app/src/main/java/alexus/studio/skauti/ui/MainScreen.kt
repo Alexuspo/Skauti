@@ -48,6 +48,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import kotlin.random.Random
 import kotlinx.coroutines.delay
+import androidx.navigation.NavController
 
 // Přidáme novou data třídu pro události
 data class Event(
@@ -194,16 +195,16 @@ fun MainScreen(
                     onClick = { navController.navigate("troops") }
                 )
                 NavigationBarItem(
-                    icon = { Icon(Icons.Default.Info, contentDescription = null) },
-                    label = { Text("O oddíle") },
-                    selected = currentRoute == "about",
-                    onClick = { navController.navigate("about") }
-                )
-                NavigationBarItem(
                     icon = { Icon(Icons.Default.Map, contentDescription = null) },
                     label = { Text("Mapa") },
                     selected = currentRoute == "map",
                     onClick = { navController.navigate("map") }
+                )
+                NavigationBarItem(
+                    icon = { Icon(Icons.Default.Info, contentDescription = null) },
+                    label = { Text("O oddíle") },
+                    selected = currentRoute == "about",
+                    onClick = { navController.navigate("about") }
                 )
             }
         }
@@ -213,7 +214,7 @@ fun MainScreen(
             startDestination = "home",
             modifier = Modifier.padding(paddingValues)
         ) {
-            composable("home") { HomeScreen() }
+            composable("home") { HomeScreen(navController) }
             composable("calendar") { CalendarScreen() }
             composable("troops") { TroopsScreen() }
             composable("about") { AboutScreen(isDarkTheme, onThemeChanged) }
@@ -223,7 +224,7 @@ fun MainScreen(
 }
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavController) {
     val context = LocalContext.current
     
     Column(
@@ -246,28 +247,8 @@ fun HomeScreen() {
             modifier = Modifier.padding(bottom = 24.dp)
         )
 
-        // Tři hlavní odkazy
         Button(
-            onClick = { /* Navigace na domovskou stránku */ },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    Icons.Default.Home,
-                    contentDescription = null,
-                    modifier = Modifier.padding(end = 8.dp)
-                )
-                Text("Domů")
-            }
-        }
-
-        Button(
-            onClick = { /* Navigace na kalendář */ },
+            onClick = { navController.navigate("calendar") },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
@@ -282,6 +263,25 @@ fun HomeScreen() {
                     modifier = Modifier.padding(end = 8.dp)
                 )
                 Text("Kalendář akcí")
+            }
+        }
+
+        Button(
+            onClick = { navController.navigate("troops") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    Icons.Default.Group,
+                    contentDescription = null,
+                    modifier = Modifier.padding(end = 8.dp)
+                )
+                Text("Družiny")
             }
         }
 
@@ -365,9 +365,14 @@ fun CalendarScreen() {
     
     val currentDate = LocalDate.now()
     
-    // Filtrujeme události podle data
-    val upcomingEvents = EventRepository.allEvents.filter { it.eventDate >= currentDate }
-    val pastEvents = EventRepository.allEvents.filter { it.eventDate < currentDate }
+    // Filtrujeme události podle data a řadíme je
+    val upcomingEvents = EventRepository.allEvents
+        .filter { it.eventDate >= currentDate }
+        .sortedBy { it.eventDate }  // Nadcházející akce seřadíme od nejbližší
+
+    val pastEvents = EventRepository.allEvents
+        .filter { it.eventDate < currentDate }
+        .sortedByDescending { it.eventDate }  // Proběhlé akce seřadíme od nejnovější po nejstarší
 
     // Vybereme správný seznam podle toho, co má být zobrazeno
     val filteredEvents = if (showUpcoming) upcomingEvents else pastEvents
