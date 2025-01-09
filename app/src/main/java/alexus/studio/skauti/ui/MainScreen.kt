@@ -70,12 +70,21 @@ import kotlinx.coroutines.launch
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
 import alexus.studio.skauti.utils.EventInitializer
+import kotlin.math.sin
+import kotlin.math.PI
+import kotlin.math.cos
+import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.graphics.drawscope.withTransform
+import androidx.compose.ui.geometry.Offset
+import android.content.Context
 
 data class Event(
-    val date: String = "",  // formát DD.MM.YYYY
+    val date: String = "",
     val name: String = "",
     val participants: String = "",
-    val eventDate: String = ""  // formát YYYY-MM-DD
+    val eventDate: String = "",
+    val registrationLink: String = "",
+    val registrationEnabled: Boolean = false  // Přidáno pro kontrolu možnosti zápisu
 ) {
     fun toLocalDate(): LocalDate {
         return try {
@@ -223,7 +232,6 @@ fun CalendarScreen(viewModel: EventViewModel = androidx.lifecycle.viewmodel.comp
     var showAllEvents by remember { mutableStateOf(false) }
     val events by viewModel.events.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
-    val connectionStatus by viewModel.connectionStatus.collectAsState()
     val currentDate = LocalDate.now()
     
     Column(
@@ -231,17 +239,6 @@ fun CalendarScreen(viewModel: EventViewModel = androidx.lifecycle.viewmodel.comp
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // Status připojení
-        Text(
-            text = connectionStatus,
-            style = MaterialTheme.typography.bodyMedium,
-            color = if (connectionStatus.contains("připojen")) 
-                MaterialTheme.colorScheme.primary 
-            else 
-                MaterialTheme.colorScheme.error,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        
         // Tlačítko pro aktualizaci
         Button(
             onClick = { viewModel.refreshData() },
@@ -336,31 +333,7 @@ fun CalendarScreen(viewModel: EventViewModel = androidx.lifecycle.viewmodel.comp
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(displayedEvents) { event ->
-                Card(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
-                    ) {
-                        Text(
-                            text = event.date,
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                        Text(
-                            text = event.name,
-                            style = MaterialTheme.typography.titleLarge,
-                            modifier = Modifier.padding(vertical = 4.dp)
-                        )
-                        Text(
-                            text = event.participants,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
+                EventCard(event = event, context = LocalContext.current)
             }
         }
 
@@ -373,6 +346,66 @@ fun CalendarScreen(viewModel: EventViewModel = androidx.lifecycle.viewmodel.comp
                     .padding(top = 16.dp)
             ) {
                 Text("Zobrazit více (${filteredEvents.size - 5})")
+            }
+        }
+    }
+}
+
+@Composable
+fun EventCard(event: Event, context: Context) {
+    Card(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Text(
+                text = event.date,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
+            Text(
+                text = event.name,
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(vertical = 4.dp)
+            )
+            Text(
+                text = event.participants,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            
+            Button(
+                onClick = {
+                    if (event.registrationEnabled && event.registrationLink.isNotEmpty()) {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(event.registrationLink))
+                        context.startActivity(intent)
+                    }
+                },
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .padding(top = 8.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (event.registrationEnabled) 
+                        MaterialTheme.colorScheme.primary 
+                    else 
+                        MaterialTheme.colorScheme.surfaceVariant
+                ),
+                enabled = event.registrationEnabled && event.registrationLink.isNotEmpty()
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        Icons.Default.Person,
+                        contentDescription = "Zapsat se",
+                        modifier = Modifier.padding(end = 8.dp)
+                    )
+                    Text(if (event.registrationEnabled) "Zapsat se" else "Zápis uzavřen")
+                }
             }
         }
     }
@@ -426,6 +459,16 @@ fun MainScreen(
                             onClick = { 
                                 viewModel.refreshData()
                                 showMenu = false
+                            },
+                            trailingIcon = {
+                                Text(
+                                    text = if (viewModel.connectionStatus.collectAsState().value.contains("připojen")) 
+                                        "✓" else "✗",
+                                    color = if (viewModel.connectionStatus.collectAsState().value.contains("připojen")) 
+                                        MaterialTheme.colorScheme.primary 
+                                    else 
+                                        MaterialTheme.colorScheme.error
+                                )
                             }
                         )
                         DropdownMenuItem(
@@ -625,7 +668,24 @@ fun HomeScreen(
 fun AboutScreen(isDarkTheme: Boolean, onThemeChanged: (Boolean) -> Unit) {
     var showBirthdayDialog by remember { mutableStateOf(false) }
     var clickCount by remember { mutableStateOf(0) }
+    var showConfetti by remember { mutableStateOf(false) }
     
+    // Datum narozenin (27. dubna)
+    val birthdayDate = LocalDate.of(LocalDate.now().year, 4, 27)
+    // Pokud už narozeniny tento rok byly, přičteme rok
+    val nextBirthday = if (birthdayDate.isBefore(LocalDate.now())) {
+        birthdayDate.plusYears(1)
+    } else {
+        birthdayDate
+    }
+    
+    // Výpočet dnů do narozenin
+    val daysUntilBirthday = ChronoUnit.DAYS.between(LocalDate.now(), nextBirthday)
+
+    if (showConfetti) {
+        BirthdayConfetti()
+    }
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -757,6 +817,7 @@ fun AboutScreen(isDarkTheme: Boolean, onThemeChanged: (Boolean) -> Unit) {
                                     clickCount++
                                     if (clickCount >= 3) {
                                         showBirthdayDialog = true
+                                        showConfetti = true
                                         clickCount = 0
                                     }
                                 }
@@ -769,12 +830,36 @@ fun AboutScreen(isDarkTheme: Boolean, onThemeChanged: (Boolean) -> Unit) {
 
     if (showBirthdayDialog) {
         AlertDialog(
-            onDismissRequest = { showBirthdayDialog = false },
-            title = { Text("Narozeniny") },
-            text = { Text("Přejeme vše nejlepší k narozeninám!") },
+            onDismissRequest = { 
+                showBirthdayDialog = false
+                showConfetti = false
+            },
+            title = { Text("Do narozenin zbývá", textAlign = TextAlign.Center) },
+            text = { 
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                ) {
+                    if (showConfetti) {
+                        BirthdayConfetti()
+                    }
+                    Text(
+                        text = "$daysUntilBirthday dní",
+                        style = MaterialTheme.typography.headlineMedium,
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .padding(vertical = 16.dp),
+                        textAlign = TextAlign.Center
+                    )
+                }
+            },
             confirmButton = {
-                Button(onClick = { showBirthdayDialog = false }) {
-                    Text("Děkuji")
+                Button(onClick = { 
+                    showBirthdayDialog = false
+                    showConfetti = false
+                }) {
+                    Text("Zavřít")
                 }
             }
         )
@@ -917,62 +1002,79 @@ fun BirthdayConfetti() {
     val particles = remember { mutableStateListOf<Particle>() }
     val infiniteTransition = rememberInfiniteTransition()
     
-    // Inicializace částic - rozprostřeme je po celé šířce
     LaunchedEffect(Unit) {
         repeat(50) {
             particles.add(
                 Particle(
-                    x = Random.nextFloat() * 1000,  // Zvětšíme rozsah pro x
-                    y = Random.nextFloat() * -1000,  // Začneme více nad horním okrajem
+                    x = Random.nextFloat() * 1000f,
+                    y = Random.nextFloat() * -800f,
                     color = listOf(
                         Color(0xFFFF1744),  // Červená
                         Color(0xFFFFD700),  // Zlatá
                         Color(0xFF00E676),  // Zelená
                         Color(0xFF2979FF),  // Modrá
                         Color(0xFFFF4081),  // Růžová
-                        Color(0xFFFFEB3B)   // Žlutá
+                        Color(0xFFFFEB3B),  // Žlutá
+                        Color(0xFF9C27B0),  // Fialová
+                        Color(0xFF00BCD4)   // Tyrkysová
                     ).random(),
-                    speed = Random.nextFloat() * 3 + 0.5f  // Větší rozsah rychlostí
+                    speed = Random.nextFloat() * 1f + 0.5f,
+                    size = Random.nextFloat() * 4f + 2f,
+                    angle = Random.nextFloat() * 360f
                 )
             )
         }
     }
 
-    // Animace pozice - prodloužíme dobu animace
     val animatedPosition by infiniteTransition.animateFloat(
-        initialValue = -1000f,
-        targetValue = 1000f,
+        initialValue = -800f,
+        targetValue = 800f,
         animationSpec = infiniteRepeatable(
-            animation = tween(3000, easing = LinearEasing),
+            animation = tween(4000, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        )
+    )
+
+    val rotationAnimation by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 360f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(6000, easing = LinearEasing),
             repeatMode = RepeatMode.Restart
         )
     )
 
     Canvas(modifier = Modifier.fillMaxSize()) {
         particles.forEach { particle ->
-            // Upravíme výpočet pozice pro plynulejší pohyb
-            val yPos = (particle.y + (animatedPosition * particle.speed)) % (size.height + 1000)
-            val xPos = (particle.x) % size.width
+            val yPos = (particle.y + (animatedPosition * particle.speed)) % (size.height + 800f)
+            val xPos = (particle.x + sin(rotationAnimation * PI.toFloat() / 180f).toFloat() * 20f * cos(yPos / 100f).toFloat()) % size.width
             
-            drawCircle(
-                color = particle.color,
-                radius = 3f,  // Menší částice pro lepší vzhled
-                center = androidx.compose.ui.geometry.Offset(
-                    if (xPos < 0) size.width + xPos else xPos,
-                    if (yPos < 0) size.height + yPos else yPos
+            withTransform({
+                translate(
+                    left = if (xPos < 0f) size.width + xPos else xPos,
+                    top = if (yPos < 0f) size.height + yPos else yPos
                 )
-            )
+                rotate(particle.angle + rotationAnimation / 2f)
+            }) {
+                drawCircle(
+                    color = particle.color.copy(alpha = 0.9f),
+                    radius = particle.size,
+                    center = Offset(0f, 0f)
+                )
+            }
         }
     }
 }
 
-// Upravená data třída pro částice
+// Upravená data třída pro částice s novými vlastnostmi
 private data class Particle(
     val x: Float,
     val y: Float,
     val color: Color,
-    val speed: Float  // Přidáme rychlost pro různou rychlost pádu
-) 
+    val speed: Float,
+    val size: Float,
+    val angle: Float
+)
 
 // Funkce pro přidání událostí do Firebase
 private fun addEventsToFirebase() {
