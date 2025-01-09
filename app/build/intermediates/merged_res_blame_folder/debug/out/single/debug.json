@@ -1,74 +1,74 @@
 [
     {
-        "merged": "alexus.studio.skauti.app-merged_res-52:/drawable_paja.png.flat",
-        "source": "alexus.studio.skauti.app-main-54:/drawable/paja.png"
+        "merged": "alexus.studio.skauti.app-merged_res-62:/mipmap-mdpi_ic_launcher.webp.flat",
+        "source": "alexus.studio.skauti.app-main-64:/mipmap-mdpi/ic_launcher.webp"
     },
     {
-        "merged": "alexus.studio.skauti.app-merged_res-52:/mipmap-hdpi_ic_launcher_round.webp.flat",
-        "source": "alexus.studio.skauti.app-main-54:/mipmap-hdpi/ic_launcher_round.webp"
+        "merged": "alexus.studio.skauti.app-merged_res-62:/mipmap-mdpi_ic_launcher_round.webp.flat",
+        "source": "alexus.studio.skauti.app-main-64:/mipmap-mdpi/ic_launcher_round.webp"
     },
     {
-        "merged": "alexus.studio.skauti.app-merged_res-52:/xml_data_extraction_rules.xml.flat",
-        "source": "alexus.studio.skauti.app-main-54:/xml/data_extraction_rules.xml"
+        "merged": "alexus.studio.skauti.app-merged_res-62:/mipmap-xxhdpi_ic_launcher_round.webp.flat",
+        "source": "alexus.studio.skauti.app-main-64:/mipmap-xxhdpi/ic_launcher_round.webp"
     },
     {
-        "merged": "alexus.studio.skauti.app-merged_res-52:/mipmap-anydpi-v26_ic_launcher.xml.flat",
-        "source": "alexus.studio.skauti.app-main-54:/mipmap-anydpi-v26/ic_launcher.xml"
+        "merged": "alexus.studio.skauti.app-merged_res-62:/xml_data_extraction_rules.xml.flat",
+        "source": "alexus.studio.skauti.app-main-64:/xml/data_extraction_rules.xml"
     },
     {
-        "merged": "alexus.studio.skauti.app-merged_res-52:/mipmap-xxxhdpi_ic_launcher.webp.flat",
-        "source": "alexus.studio.skauti.app-main-54:/mipmap-xxxhdpi/ic_launcher.webp"
+        "merged": "alexus.studio.skauti.app-merged_res-62:/mipmap-xhdpi_ic_launcher.webp.flat",
+        "source": "alexus.studio.skauti.app-main-64:/mipmap-xhdpi/ic_launcher.webp"
     },
     {
-        "merged": "alexus.studio.skauti.app-merged_res-52:/mipmap-xhdpi_ic_launcher.webp.flat",
-        "source": "alexus.studio.skauti.app-main-54:/mipmap-xhdpi/ic_launcher.webp"
+        "merged": "alexus.studio.skauti.app-merged_res-62:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "alexus.studio.skauti.app-main-64:/mipmap-anydpi-v26/ic_launcher_round.xml"
     },
     {
-        "merged": "alexus.studio.skauti.app-merged_res-52:/mipmap-xxhdpi_ic_launcher_round.webp.flat",
-        "source": "alexus.studio.skauti.app-main-54:/mipmap-xxhdpi/ic_launcher_round.webp"
+        "merged": "alexus.studio.skauti.app-merged_res-62:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "alexus.studio.skauti.app-main-64:/mipmap-anydpi-v26/ic_launcher.xml"
     },
     {
-        "merged": "alexus.studio.skauti.app-merged_res-52:/mipmap-mdpi_ic_launcher_round.webp.flat",
-        "source": "alexus.studio.skauti.app-main-54:/mipmap-mdpi/ic_launcher_round.webp"
+        "merged": "alexus.studio.skauti.app-merged_res-62:/mipmap-xxxhdpi_ic_launcher.webp.flat",
+        "source": "alexus.studio.skauti.app-main-64:/mipmap-xxxhdpi/ic_launcher.webp"
     },
     {
-        "merged": "alexus.studio.skauti.app-merged_res-52:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
-        "source": "alexus.studio.skauti.app-main-54:/mipmap-anydpi-v26/ic_launcher_round.xml"
+        "merged": "alexus.studio.skauti.app-merged_res-62:/xml_backup_rules.xml.flat",
+        "source": "alexus.studio.skauti.app-main-64:/xml/backup_rules.xml"
     },
     {
-        "merged": "alexus.studio.skauti.app-merged_res-52:/drawable_ic_launcher_foreground.xml.flat",
-        "source": "alexus.studio.skauti.app-main-54:/drawable/ic_launcher_foreground.xml"
+        "merged": "alexus.studio.skauti.app-merged_res-62:/mipmap-hdpi_ic_launcher.webp.flat",
+        "source": "alexus.studio.skauti.app-main-64:/mipmap-hdpi/ic_launcher.webp"
     },
     {
-        "merged": "alexus.studio.skauti.app-merged_res-52:/xml_backup_rules.xml.flat",
-        "source": "alexus.studio.skauti.app-main-54:/xml/backup_rules.xml"
+        "merged": "alexus.studio.skauti.app-merged_res-62:/drawable_paja.png.flat",
+        "source": "alexus.studio.skauti.app-main-64:/drawable/paja.png"
     },
     {
-        "merged": "alexus.studio.skauti.app-merged_res-52:/mipmap-hdpi_ic_launcher.webp.flat",
-        "source": "alexus.studio.skauti.app-main-54:/mipmap-hdpi/ic_launcher.webp"
+        "merged": "alexus.studio.skauti.app-merged_res-62:/mipmap-hdpi_ic_launcher_round.webp.flat",
+        "source": "alexus.studio.skauti.app-main-64:/mipmap-hdpi/ic_launcher_round.webp"
     },
     {
-        "merged": "alexus.studio.skauti.app-merged_res-52:/drawable_ic_launcher_background.xml.flat",
-        "source": "alexus.studio.skauti.app-main-54:/drawable/ic_launcher_background.xml"
+        "merged": "alexus.studio.skauti.app-merged_res-62:/drawable_logo.png.flat",
+        "source": "alexus.studio.skauti.app-main-64:/drawable/logo.png"
     },
     {
-        "merged": "alexus.studio.skauti.app-merged_res-52:/mipmap-mdpi_ic_launcher.webp.flat",
-        "source": "alexus.studio.skauti.app-main-54:/mipmap-mdpi/ic_launcher.webp"
+        "merged": "alexus.studio.skauti.app-merged_res-62:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "alexus.studio.skauti.app-main-64:/drawable/ic_launcher_foreground.xml"
     },
     {
-        "merged": "alexus.studio.skauti.app-merged_res-52:/drawable_logo.png.flat",
-        "source": "alexus.studio.skauti.app-main-54:/drawable/logo.png"
+        "merged": "alexus.studio.skauti.app-merged_res-62:/mipmap-xxhdpi_ic_launcher.webp.flat",
+        "source": "alexus.studio.skauti.app-main-64:/mipmap-xxhdpi/ic_launcher.webp"
     },
     {
-        "merged": "alexus.studio.skauti.app-merged_res-52:/mipmap-xhdpi_ic_launcher_round.webp.flat",
-        "source": "alexus.studio.skauti.app-main-54:/mipmap-xhdpi/ic_launcher_round.webp"
+        "merged": "alexus.studio.skauti.app-merged_res-62:/mipmap-xxxhdpi_ic_launcher_round.webp.flat",
+        "source": "alexus.studio.skauti.app-main-64:/mipmap-xxxhdpi/ic_launcher_round.webp"
     },
     {
-        "merged": "alexus.studio.skauti.app-merged_res-52:/mipmap-xxhdpi_ic_launcher.webp.flat",
-        "source": "alexus.studio.skauti.app-main-54:/mipmap-xxhdpi/ic_launcher.webp"
+        "merged": "alexus.studio.skauti.app-merged_res-62:/drawable_ic_launcher_background.xml.flat",
+        "source": "alexus.studio.skauti.app-main-64:/drawable/ic_launcher_background.xml"
     },
     {
-        "merged": "alexus.studio.skauti.app-merged_res-52:/mipmap-xxxhdpi_ic_launcher_round.webp.flat",
-        "source": "alexus.studio.skauti.app-main-54:/mipmap-xxxhdpi/ic_launcher_round.webp"
+        "merged": "alexus.studio.skauti.app-merged_res-62:/mipmap-xhdpi_ic_launcher_round.webp.flat",
+        "source": "alexus.studio.skauti.app-main-64:/mipmap-xhdpi/ic_launcher_round.webp"
     }
 ]

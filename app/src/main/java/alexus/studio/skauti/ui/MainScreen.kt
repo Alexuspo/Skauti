@@ -1,12 +1,24 @@
 package alexus.studio.skauti.ui
 
+import android.content.Intent
+import android.net.Uri
+import androidx.compose.animation.core.*
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -24,110 +36,346 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.AlertDialog as Dialog
+import androidx.compose.material3.AlertDialog
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import android.content.Intent
-import android.net.Uri
 import alexus.studio.skauti.R
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.animation.core.*
-import androidx.compose.foundation.Canvas
-import androidx.compose.runtime.*
-import androidx.compose.ui.graphics.Color
 import kotlin.random.Random
 import kotlinx.coroutines.delay
-import androidx.navigation.NavController
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import java.time.format.DateTimeFormatter
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.viewmodel.compose.viewModel
+import alexus.studio.skauti.utils.EventInitializer
 
-// Přidáme novou data třídu pro události
 data class Event(
-    val date: String,
-    val name: String,
-    val participants: String,
-    val eventDate: LocalDate
-)
+    val date: String = "",  // formát DD.MM.YYYY
+    val name: String = "",
+    val participants: String = "",
+    val eventDate: String = ""  // formát YYYY-MM-DD
+) {
+    fun toLocalDate(): LocalDate {
+        return try {
+            // Pokusíme se nejprve parsovat eventDate (YYYY-MM-DD)
+            LocalDate.parse(eventDate)
+        } catch (e: Exception) {
+            try {
+                // Pokud se to nepodaří, zkusíme parsovat date (DD.MM.YYYY)
+                val parts = date.split(".")
+                if (parts.size == 3) {
+                    LocalDate.of(parts[2].toInt(), parts[1].toInt(), parts[0].toInt())
+                } else {
+                    LocalDate.now() // Fallback na dnešní datum
+                }
+            } catch (e: Exception) {
+                LocalDate.now() // Fallback na dnešní datum
+            }
+        }
+    }
+}
 
-// Přidáme objekt pro správu událostí
-object EventRepository {
-    val allEvents = listOf(
-        Event("6. - 7. 9. 2024", "Pardské přespání", "Pardi vedoucí", 
-            LocalDate.of(2024, 9, 6)),
-        Event("14. 9. 2024", "Skautský frisbee turnaj o pizzu", "Všichni skauti", 
-            LocalDate.of(2024, 9, 14)),
-        Event("Nezveřejněno", "Korbo", "15+ skauti", 
-            LocalDate.of(2024, 9, 30)), // Přibližné datum pro řazení
-        Event("5. - 6. 10. 2024", "Celostředisková výprava", "Všichni z Ichthys", 
-            LocalDate.of(2024, 10, 5)),
-        Event("11. 10. 2024", "Výprava pro slibující", "Slibující 42 + 43 povinně", 
-            LocalDate.of(2024, 10, 11)),
-        Event("12. 10. 2024", "Jednodenní výprava", "Mimča (Alpaky a 2 pardský)", 
-            LocalDate.of(2024, 10, 12)),
-        Event("18. - 20. 10. 2024", "Výjezdní zasedání SRJ", "Středisková rada + kuchaři", 
-            LocalDate.of(2024, 10, 18)),
-        Event("25. - 28. 10. 2024", "Podzimky", "Pardi a Fénix všichni", 
-            LocalDate.of(2024, 10, 25)),
-        Event("1. - 3. 11. 2024", "Elixír", "15+", 
-            LocalDate.of(2024, 11, 1)),
-        Event("22. - 24. 11. 2024", "Střediskový RK PRSK", "Rádci, co tam ještě nebyli", 
-            LocalDate.of(2024, 11, 22)),
-        Event("29. 11. - 1. 12. 2024", "Víkendovka", "Všichni", 
-            LocalDate.of(2024, 11, 29)),
-        Event("19. 12. 2024", "Vánoční schůzka", "42 + 43 všichni", 
-            LocalDate.of(2024, 12, 19)),
-        Event("22. 12. 2024", "Mše na uvítání BS", "Kdokoliv", 
-            LocalDate.of(2024, 12, 22)),
-        Event("24. 12. 2024", "Betlémské světlo", "42 + 43 všichni", 
-            LocalDate.of(2024, 12, 24)),
-        Event("10. - 12. 1. 2025", "Výprava RK", "RK", 
-            LocalDate.of(2025, 1, 10)),
-        Event("17. - 19. 1. 2025", "Víkendovka", "Mladší", 
-            LocalDate.of(2025, 1, 17)),
-        Event("30. 1. - 2. 2. 2025", "Víkendovka", "Starší", 
-            LocalDate.of(2025, 1, 30)),
-        Event("14. - 16. 2. 2025", "Seznámení mladších střediskových vedoucích", "Mladší vedoucí + VO", 
-            LocalDate.of(2025, 2, 14)),
-        Event("7. - 9. 3. 2025", "Oddílová výprava 42", "42 všichni", 
-            LocalDate.of(2025, 3, 7)),
-        Event("7. - 9. 3. 2025", "Oddílová výprava 43", "43 všichni", 
-            LocalDate.of(2025, 3, 7)),
-        Event("21. - 23. 3. 2025", "Víkendovka", "42 + 43 vedoucí", 
-            LocalDate.of(2025, 3, 21)),
-        Event("29. 3. 2025", "Jednodenní výprava", "42 + 43 všichni", 
-            LocalDate.of(2025, 3, 29)),
-        Event("5. - 6. 4. 2025", "Svojsíkáč", "", 
-            LocalDate.of(2025, 4, 5)),
-        Event("11. - 13. 4. 2025", "Setkání oddílových rad", "", 
-            LocalDate.of(2025, 4, 11)),
-        Event("27. 4. 2025", "Středisková mše", "Kdokoliv", 
-            LocalDate.of(2025, 4, 27)),
-        Event("1. - 4. 5. 2025", "Hledejme cesty", "Kdokoliv", 
-            LocalDate.of(2025, 5, 1)),
-        Event("9. - 11. 5. 2025", "Puťák pro skautky a skauty", "42 + 43 skauti", 
-            LocalDate.of(2025, 5, 9)),
-        Event("16. - 18. 5. 2025", "Výprava pro vlčata", "43 vlčata", 
-            LocalDate.of(2025, 5, 16)),
-        Event("16. - 18. 5. 2025", "Puťák pro světlušky", "42 světlušky", 
-            LocalDate.of(2025, 5, 16)),
-        Event("6. - 8. 6. 2025", "Víkendová výprava", "42 + 43 všichni", 
-            LocalDate.of(2025, 6, 6)),
-        Event("27. 6. - 1. 7. 2025", "Stavba tábora", "42 + 43 starší 14 let", 
-            LocalDate.of(2025, 6, 27)),
-        Event("19. 7. - 2. 8. 2025", "Tábor 2024", "42 + 43 všichni", 
-            LocalDate.of(2025, 7, 19)),
-        Event("16. - 19. 8. 2025", "Bourání", "42 + 43 starší 14 let", 
-            LocalDate.of(2025, 8, 16))
-    ).sortedBy { it.eventDate }
+class EventViewModel : ViewModel() {
+    private val _events = MutableStateFlow<List<Event>>(emptyList())
+    val events: StateFlow<List<Event>> = _events.asStateFlow()
+    
+    private val _nextEvent = MutableStateFlow<Event?>(null)
+    val nextEvent: StateFlow<Event?> = _nextEvent.asStateFlow()
+    
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+    
+    private val _connectionStatus = MutableStateFlow<String>("Kontroluji připojení...")
+    val connectionStatus: StateFlow<String> = _connectionStatus.asStateFlow()
+    
+    private var valueEventListener: ValueEventListener? = null
+    
+    companion object {
+        private const val DATABASE_URL = "https://skauti-app-default-rtdb.europe-west1.firebasedatabase.app"
+    }
+    
+    init {
+        testFirebaseConnection()
+        setupFirebaseListener()
+    }
+    
+    private fun testFirebaseConnection() {
+        val database = FirebaseDatabase.getInstance(DATABASE_URL)
+        val testRef = database.getReference(".info/connected")
+        
+        testRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val connected = snapshot.getValue(Boolean::class.java) ?: false
+                _connectionStatus.value = if (connected) {
+                    "Firebase připojen"
+                } else {
+                    "Firebase odpojen"
+                }
+                println("Firebase status: ${_connectionStatus.value}")
+            }
+            
+            override fun onCancelled(error: DatabaseError) {
+                _connectionStatus.value = "Chyba připojení: ${error.message}"
+                println("Firebase chyba: ${error.message}")
+            }
+        })
+    }
+    
+    fun refreshData() {
+        _isLoading.value = true
+        setupFirebaseListener()
+    }
+    
+    private fun setupFirebaseListener() {
+        val database = FirebaseDatabase.getInstance(DATABASE_URL)
+        val eventsRef = database.getReference("events")
+        
+        // Odstraníme starý listener, pokud existuje
+        valueEventListener?.let { eventsRef.removeEventListener(it) }
+        
+        valueEventListener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                println("Firebase onDataChange - počet událostí: ${snapshot.childrenCount}")
+                val eventsList = mutableListOf<Event>()
+                snapshot.children.forEach { childSnapshot ->
+                    try {
+                        val event = childSnapshot.getValue(Event::class.java)
+                        println("Načtená událost: ${event?.name}, Datum: ${event?.date}")
+                        event?.let { 
+                            if (it.name.isNotEmpty() && it.date.isNotEmpty()) {
+                                eventsList.add(it)
+                            }
+                        }
+                    } catch (e: Exception) {
+                        println("Chyba při načítání události: ${e.message}")
+                    }
+                }
+                
+                println("Celkem načteno událostí: ${eventsList.size}")
+                _events.value = eventsList
+                updateNextEvent(eventsList)
+                _isLoading.value = false
+            }
+            
+            override fun onCancelled(error: DatabaseError) {
+                println("Firebase Error: ${error.message}")
+                _isLoading.value = false
+            }
+        }
+        
+        eventsRef.addValueEventListener(valueEventListener!!)
+    }
+    
+    private fun updateNextEvent(events: List<Event>) {
+        val currentDate = LocalDate.now()
+        val nextEvent = events
+            .filter { event ->
+                try {
+                    val eventDate = event.toLocalDate()
+                    eventDate.isAfter(currentDate.minusDays(1))
+                } catch (e: Exception) {
+                    false
+                }
+            }
+            .minByOrNull { event ->
+                ChronoUnit.DAYS.between(
+                    currentDate,
+                    event.toLocalDate()
+                )
+            }
+        _nextEvent.value = nextEvent
+    }
+    
+    override fun onCleared() {
+        super.onCleared()
+        // Odstraníme listener při zničení ViewModelu
+        val database = FirebaseDatabase.getInstance()
+        val eventsRef = database.getReference("events")
+        valueEventListener?.let { eventsRef.removeEventListener(it) }
+    }
+}
+
+@Composable
+fun CalendarScreen(viewModel: EventViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+    var showUpcoming by remember { mutableStateOf(true) }
+    var showAllEvents by remember { mutableStateOf(false) }
+    val events by viewModel.events.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+    val connectionStatus by viewModel.connectionStatus.collectAsState()
+    val currentDate = LocalDate.now()
+    
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        // Status připojení
+        Text(
+            text = connectionStatus,
+            style = MaterialTheme.typography.bodyMedium,
+            color = if (connectionStatus.contains("připojen")) 
+                MaterialTheme.colorScheme.primary 
+            else 
+                MaterialTheme.colorScheme.error,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+        
+        // Tlačítko pro aktualizaci
+        Button(
+            onClick = { viewModel.refreshData() },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp)
+        ) {
+            if (isLoading) {
+                Text("Aktualizuji...")
+            } else {
+                Text("Aktualizovat")
+            }
+        }
+
+        // Přepínací tlačítka
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Button(
+                onClick = { 
+                    showUpcoming = true
+                    showAllEvents = false
+                },
+                modifier = Modifier.weight(1f),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (showUpcoming) MaterialTheme.colorScheme.primary 
+                                   else MaterialTheme.colorScheme.surfaceVariant
+                )
+            ) {
+                Text("Nadcházející")
+            }
+            Button(
+                onClick = { 
+                    showUpcoming = false
+                    showAllEvents = false
+                },
+                modifier = Modifier.weight(1f),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (!showUpcoming) MaterialTheme.colorScheme.primary 
+                                   else MaterialTheme.colorScheme.surfaceVariant
+                )
+            ) {
+                Text("Proběhlé")
+            }
+        }
+        
+        // Filtrujeme události podle data
+        val upcomingEvents = events
+            .filter { event ->
+                try {
+                    val eventDate = event.toLocalDate()
+                    eventDate.isAfter(currentDate.minusDays(1))
+                } catch (e: Exception) {
+                    println("Chyba při filtrování události ${event.name}: ${e.message}")
+                    false
+                }
+            }
+            .sortedBy { it.toLocalDate() }
+
+        val pastEvents = events
+            .filter { event ->
+                try {
+                    val eventDate = event.toLocalDate()
+                    eventDate.isBefore(currentDate)
+                } catch (e: Exception) {
+                    println("Chyba při filtrování události ${event.name}: ${e.message}")
+                    false
+                }
+            }
+            .sortedByDescending { it.toLocalDate() }
+
+        // Debug výpisy
+        LaunchedEffect(events) {
+            println("Počet všech událostí: ${events.size}")
+            println("Počet nadcházejících událostí: ${upcomingEvents.size}")
+            println("Počet proběhlých událostí: ${pastEvents.size}")
+            events.forEach { event ->
+                println("Událost: ${event.name}, Datum: ${event.date}, EventDate: ${event.eventDate}")
+            }
+        }
+
+        // Vybereme správný seznam podle toho, co má být zobrazeno
+        val filteredEvents = if (showUpcoming) upcomingEvents else pastEvents
+        val displayedEvents = if (showAllEvents) filteredEvents else filteredEvents.take(5)
+
+        // Seznam událostí
+        LazyColumn(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(displayedEvents) { event ->
+                Card(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                    ) {
+                        Text(
+                            text = event.date,
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Text(
+                            text = event.name,
+                            style = MaterialTheme.typography.titleLarge,
+                            modifier = Modifier.padding(vertical = 4.dp)
+                        )
+                        Text(
+                            text = event.participants,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
+        }
+
+        // Tlačítko "Zobrazit více"
+        if (!showAllEvents && filteredEvents.size > 5) {
+            Button(
+                onClick = { showAllEvents = true },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp)
+            ) {
+                Text("Zobrazit více (${filteredEvents.size - 5})")
+            }
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -141,6 +389,9 @@ fun MainScreen(
     val navController = rememberNavController()
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route ?: "home"
+    
+    // Vytvoříme viewModel zde, aby byl sdílený mezi všemi obrazovkami
+    val viewModel: EventViewModel = viewModel()
 
     Scaffold(
         topBar = {
@@ -170,6 +421,20 @@ fun MainScreen(
                                 )
                             }
                         )
+                        DropdownMenuItem(
+                            text = { Text("Kontrola připojení") },
+                            onClick = { 
+                                viewModel.refreshData()
+                                showMenu = false
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Inicializovat události") },
+                            onClick = { 
+                                EventInitializer.initializeEvents()
+                                showMenu = false
+                            }
+                        )
                     }
                 }
             )
@@ -189,13 +454,13 @@ fun MainScreen(
                     onClick = { navController.navigate("calendar") }
                 )
                 NavigationBarItem(
-                    icon = { Icon(Icons.Default.Group, contentDescription = null) },
+                    icon = { Icon(Icons.Default.Person, contentDescription = null) },
                     label = { Text("Družiny") },
                     selected = currentRoute == "troops",
                     onClick = { navController.navigate("troops") }
                 )
                 NavigationBarItem(
-                    icon = { Icon(Icons.Default.Map, contentDescription = null) },
+                    icon = { Icon(Icons.Default.LocationOn, contentDescription = null) },
                     label = { Text("Mapa") },
                     selected = currentRoute == "map",
                     onClick = { navController.navigate("map") }
@@ -214,8 +479,8 @@ fun MainScreen(
             startDestination = "home",
             modifier = Modifier.padding(paddingValues)
         ) {
-            composable("home") { HomeScreen(navController) }
-            composable("calendar") { CalendarScreen() }
+            composable("home") { HomeScreen(navController, viewModel) }
+            composable("calendar") { CalendarScreen(viewModel) }
             composable("troops") { TroopsScreen() }
             composable("about") { AboutScreen(isDarkTheme, onThemeChanged) }
             composable("map") { MapScreen() }
@@ -224,8 +489,12 @@ fun MainScreen(
 }
 
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(
+    navController: NavController,
+    viewModel: EventViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+) {
     val context = LocalContext.current
+    val nextEvent by viewModel.nextEvent.collectAsState()
     
     Column(
         modifier = Modifier
@@ -277,7 +546,7 @@ fun HomeScreen(navController: NavController) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    Icons.Default.Group,
+                    Icons.Default.Person,
                     contentDescription = null,
                     modifier = Modifier.padding(end = 8.dp)
                 )
@@ -316,12 +585,6 @@ fun HomeScreen(navController: NavController) {
             modifier = Modifier.padding(bottom = 8.dp)
         )
 
-        val nextEvent = remember {
-            EventRepository.allEvents
-                .filter { it.eventDate.isAfter(LocalDate.now()) }
-                .minByOrNull { it.eventDate }
-        }
-
         if (nextEvent != null) {
             Card(
                 modifier = Modifier
@@ -334,16 +597,16 @@ fun HomeScreen(navController: NavController) {
                         .padding(16.dp)
                 ) {
                     Text(
-                        text = nextEvent.name,
+                        text = nextEvent!!.name,
                         style = MaterialTheme.typography.titleMedium
                     )
                     Text(
-                        text = "Datum: ${nextEvent.date}",
+                        text = "Datum: ${nextEvent!!.date}",
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.padding(top = 4.dp)
                     )
                     Text(
-                        text = "Účastníci: ${nextEvent.participants}",
+                        text = "Účastníci: ${nextEvent!!.participants}",
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.padding(top = 4.dp)
                     )
@@ -358,115 +621,6 @@ fun HomeScreen(navController: NavController) {
     }
 }
 
-@Composable
-fun CalendarScreen() {
-    var showUpcoming by remember { mutableStateOf(true) }
-    var showAllEvents by remember { mutableStateOf(false) }
-    
-    val currentDate = LocalDate.now()
-    
-    // Filtrujeme události podle data a řadíme je
-    val upcomingEvents = EventRepository.allEvents
-        .filter { it.eventDate >= currentDate }
-        .sortedBy { it.eventDate }  // Nadcházející akce seřadíme od nejbližší
-
-    val pastEvents = EventRepository.allEvents
-        .filter { it.eventDate < currentDate }
-        .sortedByDescending { it.eventDate }  // Proběhlé akce seřadíme od nejnovější po nejstarší
-
-    // Vybereme správný seznam podle toho, co má být zobrazeno
-    val filteredEvents = if (showUpcoming) upcomingEvents else pastEvents
-    val displayedEvents = if (showAllEvents) filteredEvents else filteredEvents.take(5)
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        // Přepínací tlačítka
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Button(
-                onClick = { 
-                    showUpcoming = true
-                    showAllEvents = false // Reset zobrazení při přepnutí
-                },
-                modifier = Modifier.weight(1f),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = if (showUpcoming) MaterialTheme.colorScheme.primary 
-                                   else MaterialTheme.colorScheme.surfaceVariant
-                )
-            ) {
-                Text("Nadcházející akce (${upcomingEvents.size})")
-            }
-            Button(
-                onClick = { 
-                    showUpcoming = false
-                    showAllEvents = false // Reset zobrazení při přepnutí
-                },
-                modifier = Modifier.weight(1f),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = if (!showUpcoming) MaterialTheme.colorScheme.surfaceVariant 
-                                   else MaterialTheme.colorScheme.surfaceVariant
-                )
-            ) {
-                Text("Proběhlé akce (${pastEvents.size})")
-            }
-        }
-
-        // Seznam událostí
-        LazyColumn(
-            modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            items(displayedEvents) { event ->
-                Card(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
-                    ) {
-                        Text(
-                            text = event.date,
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                        Text(
-                            text = event.name,
-                            style = MaterialTheme.typography.titleLarge,
-                            modifier = Modifier.padding(vertical = 4.dp)
-                        )
-                        Text(
-                            text = event.participants,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
-            }
-        }
-
-        // Tlačítko "Zobrazit více"
-        if (!showAllEvents && filteredEvents.size > 5) {
-            Button(
-                onClick = { showAllEvents = true },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp)
-            ) {
-                Text("Zobrazit více (${filteredEvents.size - 5})")
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AboutScreen(isDarkTheme: Boolean, onThemeChanged: (Boolean) -> Unit) {
     var showBirthdayDialog by remember { mutableStateOf(false) }
@@ -614,62 +768,16 @@ fun AboutScreen(isDarkTheme: Boolean, onThemeChanged: (Boolean) -> Unit) {
     }
 
     if (showBirthdayDialog) {
-        Dialog(onDismissRequest = { showBirthdayDialog = false }) {
-            Surface(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .wrapContentSize()
-                    .size(300.dp),  // Omezená velikost dialogu
-                shape = MaterialTheme.shapes.medium,
-                color = MaterialTheme.colorScheme.surface
-            ) {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    BirthdayConfetti()
-                    
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            "🎂 Odpočet do narozenin 🎂",
-                            style = MaterialTheme.typography.titleMedium,
-                            modifier = Modifier.padding(bottom = 8.dp),
-                            textAlign = TextAlign.Center
-                        )
-                        
-                        val currentDate = LocalDate.now()
-                        val birthdayThisYear = LocalDate.of(
-                            currentDate.year + if (currentDate.monthValue > 4 || 
-                                (currentDate.monthValue == 4 && currentDate.dayOfMonth > 27)) 1 else 0, 
-                            4, 
-                            27
-                        )
-                        val daysUntilBirthday = ChronoUnit.DAYS.between(currentDate, birthdayThisYear)
-
-                        Text(
-                            "$daysUntilBirthday",
-                            style = MaterialTheme.typography.displayMedium,
-                            color = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.padding(vertical = 4.dp)
-                        )
-
-                        Text(
-                            if(daysUntilBirthday == 1L) "den" else "dní",
-                            style = MaterialTheme.typography.titleSmall
-                        )
-                        
-                        Button(
-                            onClick = { showBirthdayDialog = false },
-                            modifier = Modifier.padding(top = 8.dp)
-                        ) {
-                            Text("Zavřít")
-                        }
-                    }
+        AlertDialog(
+            onDismissRequest = { showBirthdayDialog = false },
+            title = { Text("Narozeniny") },
+            text = { Text("Přejeme vše nejlepší k narozeninám!") },
+            confirmButton = {
+                Button(onClick = { showBirthdayDialog = false }) {
+                    Text("Děkuji")
                 }
             }
-        }
+        )
     }
 }
 
@@ -865,3 +973,29 @@ private data class Particle(
     val color: Color,
     val speed: Float  // Přidáme rychlost pro různou rychlost pádu
 ) 
+
+// Funkce pro přidání událostí do Firebase
+private fun addEventsToFirebase() {
+    val database = FirebaseDatabase.getInstance()
+    val eventsRef = database.getReference("events")
+    
+    val events = listOf(
+        Event(
+            name = "Fénix víkend",
+            date = "6.9.2024",
+            participants = "Fénix vedoucí",
+            eventDate = "2024-09-06"
+        ),
+        Event(
+            name = "Pardské přespání",
+            date = "6.9.2024 - 7.9.2024",
+            participants = "Pardi vedoucí",
+            eventDate = "2024-09-06"
+        ),
+        // ... další události
+    )
+    
+    events.forEach { event ->
+        eventsRef.push().setValue(event)
+    }
+} 

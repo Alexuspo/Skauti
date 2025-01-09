@@ -8,5 +8,11 @@
     <color name="teal_700">#FF018786</color>
     <color name="white">#FFFFFFFF</color>
     <string name="app_name">Skauti</string>
+    <string name="gcm_defaultSenderId" translatable="false">67742684224</string>
+    <string name="google_api_key" translatable="false">AIzaSyBlLiRa16onZllRg3oHdbxVp06HYOfEo4M</string>
+    <string name="google_app_id" translatable="false">1:67742684224:android:6026c8f985ac44961efba5</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyBlLiRa16onZllRg3oHdbxVp06HYOfEo4M</string>
+    <string name="google_storage_bucket" translatable="false">skauti-app.firebasestorage.app</string>
+    <string name="project_id" translatable="false">skauti-app</string>
     <style name="Theme.Skauti" parent="android:Theme.Material.Light.NoActionBar"/>
 </resources>
