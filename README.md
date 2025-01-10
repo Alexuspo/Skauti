@@ -4,7 +4,11 @@
 Jednoduchá aplikace pro skautský oddíl a nadcházejícími akcemi družinek a dálších věcí.
 
 Aplikace je open-source takže všechny informace o ní a jak funguje jsou zde 
-
+Takže prakticky si můžete celou aplikaci vzít a předělat ji pro vlastní oddíl.
+Pokud budete něco chtít kontaktujte mě! :D
+Podpořte vývoj aplikace: 🤑💵💸
+1012075522/5500 
+Díky všem :3
 
 ## Implementované:✔️✔️✔️
 
