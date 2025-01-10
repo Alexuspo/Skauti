@@ -14,6 +14,10 @@ Podpořte vývoj aplikace: 🤑💵💸
 
 Díky všem :3
 
+Vývoj aplikace:
+
+![50%](https://progress-bar.xyz/50)
+
 ## Implementované:✔️✔️✔️
 
 - Napojení na API a přímé aktualizace kalendáře ✔️
