@@ -14,9 +14,9 @@ Podpořte vývoj aplikace: 🤑💵💸
 
 Díky všem :3
 
-Vývoj aplikace:
+Postup vývoje aplikace:
 
-![50%](https://progress-bar.xyz/50)
+![75%](https://progress-bar.xyz/75)
 
 ## Implementované:✔️✔️✔️
 
