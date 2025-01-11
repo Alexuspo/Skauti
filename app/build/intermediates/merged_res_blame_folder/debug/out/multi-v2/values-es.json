@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "alexus.studio.skauti.app-mergeDebugResources-60:/values-es/values-es.xml",
+            "outputFile": "alexus.studio.skauti.app-mergeDebugResources-61:/values-es/values-es.xml",
             "map": [
                 {
                     "source": "C:\\Users\\Alex\\.gradle\\caches\\8.9\\transforms\\55efb7c9a475e66f547c7bb90441cdef\\transformed\\play-services-base-18.1.0\\res\\values-es\\values.xml",

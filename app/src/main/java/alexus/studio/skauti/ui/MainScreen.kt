@@ -676,120 +676,120 @@ fun HomeScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
-            Image(
-                painter = painterResource(id = R.drawable.logo),
-                contentDescription = "Logo Skauti",
-                modifier = Modifier
-                    .size(200.dp)
-                    .padding(bottom = 16.dp)
-            )
-            
-            Text(
-                "43. Oddíl Pardi",
-                style = MaterialTheme.typography.headlineMedium,
-                modifier = Modifier.padding(bottom = 24.dp)
-            )
+        Image(
+            painter = painterResource(id = R.drawable.logo),
+            contentDescription = "Logo Skauti",
+            modifier = Modifier
+                .size(200.dp)
+                .padding(bottom = 16.dp)
+        )
+        
+        Text(
+            "43. Oddíl Pardi",
+            style = MaterialTheme.typography.headlineMedium,
+            modifier = Modifier.padding(bottom = 24.dp)
+        )
 
-            Button(
-                onClick = { navController.navigate("calendar") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp)
+        Button(
+            onClick = { navController.navigate("calendar") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        Icons.Default.DateRange,
-                        contentDescription = null,
-                        modifier = Modifier.padding(end = 8.dp)
-                    )
-                    Text("Kalendář akcí")
-                }
-            }
-
-            Button(
-                onClick = { navController.navigate("troops") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp)
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        Icons.Default.Person,
-                        contentDescription = null,
-                        modifier = Modifier.padding(end = 8.dp)
-                    )
-                    Text("Družiny")
-                }
-            }
-
-            Button(
-                onClick = {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://eu.zonerama.com/Pardi/1364990"))
-                    context.startActivity(intent)
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp)
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        Icons.Default.PhotoLibrary,
-                        contentDescription = null,
-                        modifier = Modifier.padding(end = 8.dp)
-                    )
-                    Text("Fotogalerie")
-                }
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
-            
-            Text(
-                "Nejbližší akce:",
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-
-            if (nextEvent != null) {
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .padding(16.dp)
-                    ) {
-                        Text(
-                            text = nextEvent!!.name,
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                        Text(
-                            text = "Datum: ${nextEvent!!.date}",
-                            style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier.padding(top = 4.dp)
-                        )
-                        Text(
-                            text = "Účastníci: ${nextEvent!!.participants}",
-                            style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier.padding(top = 4.dp)
-                        )
-                    }
-                }
-            } else {
-                Text(
-                    "Momentálně nejsou naplánovány žádné akce",
-                    style = MaterialTheme.typography.bodyLarge
+                Icon(
+                    Icons.Default.DateRange,
+                    contentDescription = null,
+                    modifier = Modifier.padding(end = 8.dp)
                 )
+                Text("Kalendář akcí")
+            }
+        }
+
+        Button(
+            onClick = { navController.navigate("troops") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                        Icons.Default.Person,
+                    contentDescription = null,
+                    modifier = Modifier.padding(end = 8.dp)
+                )
+                Text("Družiny")
+            }
+        }
+
+        Button(
+            onClick = {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://eu.zonerama.com/Pardi/1364990"))
+                context.startActivity(intent)
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    Icons.Default.PhotoLibrary,
+                    contentDescription = null,
+                    modifier = Modifier.padding(end = 8.dp)
+                )
+                Text("Fotogalerie")
+            }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+        
+        Text(
+            "Nejbližší akce:",
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+
+        if (nextEvent != null) {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .padding(16.dp)
+                ) {
+                    Text(
+                            text = nextEvent!!.name,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Text(
+                            text = "Datum: ${nextEvent!!.date}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                    Text(
+                            text = "Účastníci: ${nextEvent!!.participants}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                }
+            }
+        } else {
+            Text(
+                "Momentálně nejsou naplánovány žádné akce",
+                style = MaterialTheme.typography.bodyLarge
+            )
             }
         }
     }
@@ -816,7 +816,7 @@ fun AboutScreen(isDarkTheme: Boolean, onThemeChanged: (Boolean) -> Unit) {
     if (showConfetti) {
         BirthdayConfetti()
     }
-
+    
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -968,21 +968,21 @@ fun AboutScreen(isDarkTheme: Boolean, onThemeChanged: (Boolean) -> Unit) {
             title = { Text("Do narozenin zbývá", textAlign = TextAlign.Center) },
             text = { 
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
                         .height(200.dp)
-                ) {
+                    ) {
                     if (showConfetti) {
                         BirthdayConfetti()
                     }
-                    Text(
+                        Text(
                         text = "$daysUntilBirthday dní",
                         style = MaterialTheme.typography.headlineMedium,
                         modifier = Modifier
                             .align(Alignment.Center)
                             .padding(vertical = 16.dp),
-                        textAlign = TextAlign.Center
-                    )
+                            textAlign = TextAlign.Center
+                        )
                 }
             },
             confirmButton = {
@@ -990,9 +990,9 @@ fun AboutScreen(isDarkTheme: Boolean, onThemeChanged: (Boolean) -> Unit) {
                     showBirthdayDialog = false
                     showConfetti = false
                 }) {
-                    Text("Zavřít")
-                }
-            }
+                            Text("Zavřít")
+                        }
+                    }
         )
     }
 }
@@ -1187,7 +1187,7 @@ fun BirthdayConfetti() {
                 )
                 rotate(particle.angle + rotationAnimation / 2f)
             }) {
-                drawCircle(
+            drawCircle(
                     color = particle.color.copy(alpha = 0.9f),
                     radius = particle.size,
                     center = Offset(0f, 0f)
