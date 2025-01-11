@@ -20,6 +20,7 @@ Postup vývoje aplikace:
 - Když příjde možnost zapsání se na akce přijde do aplikace. ✔️
 - Přihlašování pro rodiče abychom předešli nežádoucímu přihlašování náhodných lidí. ✔️
 ## Další věci co se chystají:
+- 
 - Informace o nové aktualizaci na playstore přijde oznámení jako pop up okénko (až bude na playstore) 
 - Doladění chyb a bug fixů!
 
