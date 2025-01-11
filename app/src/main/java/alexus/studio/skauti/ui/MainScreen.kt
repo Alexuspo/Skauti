@@ -77,6 +77,9 @@ import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.geometry.Offset
 import android.content.Context
+import android.app.Application
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 
 data class Event(
     val date: String = "",
@@ -84,7 +87,7 @@ data class Event(
     val participants: String = "",
     val eventDate: String = "",
     val registrationLink: String = "",
-    val registrationEnabled: Boolean = false  // Přidáno pro kontrolu možnosti zápisu
+    val registrationEnabled: Boolean = false
 ) {
     fun toLocalDate(): LocalDate {
         return try {
@@ -94,8 +97,9 @@ data class Event(
             try {
                 // Pokud se to nepodaří, zkusíme parsovat date (DD.MM.YYYY)
                 val parts = date.split(".")
-                if (parts.size == 3) {
-                    LocalDate.of(parts[2].toInt(), parts[1].toInt(), parts[0].toInt())
+                if (parts.size >= 3) {
+                    val year = if (parts[2].contains(" ")) parts[2].split(" ")[0] else parts[2]
+                    LocalDate.of(year.toInt(), parts[1].toInt(), parts[0].toInt())
                 } else {
                     LocalDate.now() // Fallback na dnešní datum
                 }
@@ -105,6 +109,11 @@ data class Event(
         }
     }
 }
+
+data class AppInfo(
+    val version: String,
+    val author: String
+)
 
 class EventViewModel : ViewModel() {
     private val _events = MutableStateFlow<List<Event>>(emptyList())
@@ -119,7 +128,15 @@ class EventViewModel : ViewModel() {
     private val _connectionStatus = MutableStateFlow<String>("Kontroluji připojení...")
     val connectionStatus: StateFlow<String> = _connectionStatus.asStateFlow()
     
+    private val _isAuthenticated = MutableStateFlow(false)
+    val isAuthenticated: StateFlow<Boolean> = _isAuthenticated.asStateFlow()
+    
     private var valueEventListener: ValueEventListener? = null
+    
+    private val _appInfo = MutableStateFlow<AppInfo?>(null)
+    val appInfo: StateFlow<AppInfo?> = _appInfo.asStateFlow()
+
+    private var application: Application? = null
     
     companion object {
         private const val DATABASE_URL = "https://skauti-app-default-rtdb.europe-west1.firebasedatabase.app"
@@ -128,8 +145,14 @@ class EventViewModel : ViewModel() {
     init {
         testFirebaseConnection()
         setupFirebaseListener()
+        loadAppInfo()
     }
     
+    fun initialize(app: Application) {
+        application = app
+        checkAuthentication()
+    }
+
     private fun testFirebaseConnection() {
         val database = FirebaseDatabase.getInstance(DATABASE_URL)
         val testRef = database.getReference(".info/connected")
@@ -142,12 +165,10 @@ class EventViewModel : ViewModel() {
                 } else {
                     "Firebase odpojen"
                 }
-                println("Firebase status: ${_connectionStatus.value}")
             }
             
             override fun onCancelled(error: DatabaseError) {
                 _connectionStatus.value = "Chyba připojení: ${error.message}"
-                println("Firebase chyba: ${error.message}")
             }
         })
     }
@@ -161,17 +182,14 @@ class EventViewModel : ViewModel() {
         val database = FirebaseDatabase.getInstance(DATABASE_URL)
         val eventsRef = database.getReference("events")
         
-        // Odstraníme starý listener, pokud existuje
         valueEventListener?.let { eventsRef.removeEventListener(it) }
         
         valueEventListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                println("Firebase onDataChange - počet událostí: ${snapshot.childrenCount}")
                 val eventsList = mutableListOf<Event>()
                 snapshot.children.forEach { childSnapshot ->
                     try {
                         val event = childSnapshot.getValue(Event::class.java)
-                        println("Načtená událost: ${event?.name}, Datum: ${event?.date}")
                         event?.let { 
                             if (it.name.isNotEmpty() && it.date.isNotEmpty()) {
                                 eventsList.add(it)
@@ -182,14 +200,12 @@ class EventViewModel : ViewModel() {
                     }
                 }
                 
-                println("Celkem načteno událostí: ${eventsList.size}")
                 _events.value = eventsList
                 updateNextEvent(eventsList)
                 _isLoading.value = false
             }
             
             override fun onCancelled(error: DatabaseError) {
-                println("Firebase Error: ${error.message}")
                 _isLoading.value = false
             }
         }
@@ -209,25 +225,59 @@ class EventViewModel : ViewModel() {
                 }
             }
             .minByOrNull { event ->
-                ChronoUnit.DAYS.between(
-                    currentDate,
-                    event.toLocalDate()
-                )
+                ChronoUnit.DAYS.between(currentDate, event.toLocalDate())
             }
         _nextEvent.value = nextEvent
     }
     
+    private fun loadAppInfo() {
+        val database = FirebaseDatabase.getInstance(DATABASE_URL)
+        val appInfoRef = database.getReference("appInfo")
+        
+        appInfoRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val version = snapshot.child("version").getValue(String::class.java) ?: "2.1.0"
+                val author = snapshot.child("author").getValue(String::class.java) ?: "Made by: Alexus"
+                _appInfo.value = AppInfo(version, author)
+            }
+            
+            override fun onCancelled(error: DatabaseError) {
+                println("Chyba při načítání informací o aplikaci: ${error.message}")
+            }
+        })
+    }
+    
+    private fun checkAuthentication() {
+        val sharedPrefs = application?.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        _isAuthenticated.value = sharedPrefs?.getBoolean("is_authenticated", false) ?: false
+    }
+
+    fun authenticate(password: String): Boolean {
+        if (password == "Pardi2024") {
+            val sharedPrefs = application?.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+            sharedPrefs?.edit()?.putBoolean("is_authenticated", true)?.apply()
+            _isAuthenticated.value = true
+            return true
+        }
+        return false
+    }
+    
     override fun onCleared() {
         super.onCleared()
-        // Odstraníme listener při zničení ViewModelu
-        val database = FirebaseDatabase.getInstance()
+        val database = FirebaseDatabase.getInstance(DATABASE_URL)
         val eventsRef = database.getReference("events")
         valueEventListener?.let { eventsRef.removeEventListener(it) }
     }
 }
 
 @Composable
-fun CalendarScreen(viewModel: EventViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+fun CalendarScreen(viewModel: EventViewModel = viewModel()) {
+    val context = LocalContext.current
+    
+    LaunchedEffect(Unit) {
+        viewModel.initialize(context.applicationContext as Application)
+    }
+    
     var showUpcoming by remember { mutableStateOf(true) }
     var showAllEvents by remember { mutableStateOf(false) }
     val events by viewModel.events.collectAsState()
@@ -333,7 +383,7 @@ fun CalendarScreen(viewModel: EventViewModel = androidx.lifecycle.viewmodel.comp
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(displayedEvents) { event ->
-                EventCard(event = event, context = LocalContext.current)
+                EventCard(event = event, context = LocalContext.current, viewModel = viewModel)
             }
         }
 
@@ -352,7 +402,45 @@ fun CalendarScreen(viewModel: EventViewModel = androidx.lifecycle.viewmodel.comp
 }
 
 @Composable
-fun EventCard(event: Event, context: Context) {
+fun EventCard(event: Event, context: Context, viewModel: EventViewModel) {
+    var showAuthDialog by remember { mutableStateOf(false) }
+    var password by remember { mutableStateOf("") }
+    val isAuthenticated by viewModel.isAuthenticated.collectAsState()
+
+    if (showAuthDialog) {
+        AlertDialog(
+            onDismissRequest = { showAuthDialog = false },
+            title = { Text("První přihlášení") },
+            text = {
+                Column {
+                    Text("Pro přístup k přihlašování na akce zadejte heslo:")
+                    OutlinedTextField(
+                        value = password,
+                        onValueChange = { password = it },
+                        label = { Text("Heslo") },
+                        visualTransformation = PasswordVisualTransformation()
+                    )
+                }
+            },
+            confirmButton = {
+                Button(onClick = {
+                    if (viewModel.authenticate(password)) {
+                        showAuthDialog = false
+                    } else {
+                        password = ""
+                    }
+                }) {
+                    Text("Potvrdit")
+                }
+            },
+            dismissButton = {
+                Button(onClick = { showAuthDialog = false }) {
+                    Text("Zrušit")
+                }
+            }
+        )
+    }
+
     Card(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -379,7 +467,9 @@ fun EventCard(event: Event, context: Context) {
             
             Button(
                 onClick = {
-                    if (event.registrationEnabled && event.registrationLink.isNotEmpty()) {
+                    if (!isAuthenticated) {
+                        showAuthDialog = true
+                    } else if (event.registrationEnabled && event.registrationLink.isNotEmpty()) {
                         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(event.registrationLink))
                         context.startActivity(intent)
                     }
@@ -418,13 +508,48 @@ fun MainScreen(
     onThemeChanged: (Boolean) -> Unit
 ) {
     var showMenu by remember { mutableStateOf(false) }
+    var showAboutDialog by remember { mutableStateOf(false) }
     
     val navController = rememberNavController()
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route ?: "home"
-    
-    // Vytvoříme viewModel zde, aby byl sdílený mezi všemi obrazovkami
     val viewModel: EventViewModel = viewModel()
+    val appInfo by viewModel.appInfo.collectAsState()
+
+    if (showAboutDialog) {
+        AlertDialog(
+            onDismissRequest = { showAboutDialog = false },
+            title = { Text("O aplikaci") },
+            text = {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.alex),
+                        contentDescription = "Logo vývojáře",
+                        modifier = Modifier
+                            .size(150.dp)
+                            .padding(vertical = 16.dp)
+                    )
+                    Text(
+                        text = appInfo?.author ?: "Made by: Alexus",
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                    Text(
+                        text = "Verze: ${appInfo?.version ?: "2.1.0"}",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            },
+            confirmButton = {
+                Button(onClick = { showAboutDialog = false }) {
+                    Text("Zavřít")
+                }
+            }
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -472,9 +597,16 @@ fun MainScreen(
                             }
                         )
                         DropdownMenuItem(
-                            text = { Text("Inicializovat události") },
+                            text = { Text("O aplikaci") },
                             onClick = { 
-                                EventInitializer.initializeEvents()
+                                showAboutDialog = true
+                                showMenu = false
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Inicializovat info") },
+                            onClick = { 
+                                EventInitializer.initializeAppInfo()
                                 showMenu = false
                             }
                         )
@@ -534,132 +666,138 @@ fun MainScreen(
 @Composable
 fun HomeScreen(
     navController: NavController,
-    viewModel: EventViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    viewModel: EventViewModel = viewModel()
 ) {
     val context = LocalContext.current
+    
+    LaunchedEffect(Unit) {
+        viewModel.initialize(context.applicationContext as Application)
+    }
+    
     val nextEvent by viewModel.nextEvent.collectAsState()
     
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.logo),
-            contentDescription = "Logo Skauti",
-            modifier = Modifier
-                .size(200.dp)
-                .padding(bottom = 16.dp)
-        )
-        
-        Text(
-            "43. Oddíl Pardi",
-            style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier.padding(bottom = 24.dp)
-        )
+        item {
+            Image(
+                painter = painterResource(id = R.drawable.logo),
+                contentDescription = "Logo Skauti",
+                modifier = Modifier
+                    .size(200.dp)
+                    .padding(bottom = 16.dp)
+            )
+            
+            Text(
+                "43. Oddíl Pardi",
+                style = MaterialTheme.typography.headlineMedium,
+                modifier = Modifier.padding(bottom = 24.dp)
+            )
 
-        Button(
-            onClick = { navController.navigate("calendar") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    Icons.Default.DateRange,
-                    contentDescription = null,
-                    modifier = Modifier.padding(end = 8.dp)
-                )
-                Text("Kalendář akcí")
-            }
-        }
-
-        Button(
-            onClick = { navController.navigate("troops") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    Icons.Default.Person,
-                    contentDescription = null,
-                    modifier = Modifier.padding(end = 8.dp)
-                )
-                Text("Družiny")
-            }
-        }
-
-        Button(
-            onClick = {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://eu.zonerama.com/Pardi/1364990"))
-                context.startActivity(intent)
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    Icons.Default.PhotoLibrary,
-                    contentDescription = null,
-                    modifier = Modifier.padding(end = 8.dp)
-                )
-                Text("Fotogalerie")
-            }
-        }
-
-        // Nejbližší akce se přesune pod tlačítka
-        Spacer(modifier = Modifier.height(24.dp))
-        
-        Text(
-            "Nejbližší akce:",
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-
-        if (nextEvent != null) {
-            Card(
+            Button(
+                onClick = { navController.navigate("calendar") },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                    .padding(vertical = 8.dp)
             ) {
-                Column(
-                    modifier = Modifier
-                        .padding(16.dp)
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = nextEvent!!.name,
-                        style = MaterialTheme.typography.titleMedium
+                    Icon(
+                        Icons.Default.DateRange,
+                        contentDescription = null,
+                        modifier = Modifier.padding(end = 8.dp)
                     )
-                    Text(
-                        text = "Datum: ${nextEvent!!.date}",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(top = 4.dp)
-                    )
-                    Text(
-                        text = "Účastníci: ${nextEvent!!.participants}",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(top = 4.dp)
-                    )
+                    Text("Kalendář akcí")
                 }
             }
-        } else {
+
+            Button(
+                onClick = { navController.navigate("troops") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        Icons.Default.Person,
+                        contentDescription = null,
+                        modifier = Modifier.padding(end = 8.dp)
+                    )
+                    Text("Družiny")
+                }
+            }
+
+            Button(
+                onClick = {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://eu.zonerama.com/Pardi/1364990"))
+                    context.startActivity(intent)
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        Icons.Default.PhotoLibrary,
+                        contentDescription = null,
+                        modifier = Modifier.padding(end = 8.dp)
+                    )
+                    Text("Fotogalerie")
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+            
             Text(
-                "Momentálně nejsou naplánovány žádné akce",
-                style = MaterialTheme.typography.bodyLarge
+                "Nejbližší akce:",
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(bottom = 8.dp)
             )
+
+            if (nextEvent != null) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .padding(16.dp)
+                    ) {
+                        Text(
+                            text = nextEvent!!.name,
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        Text(
+                            text = "Datum: ${nextEvent!!.date}",
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(top = 4.dp)
+                        )
+                        Text(
+                            text = "Účastníci: ${nextEvent!!.participants}",
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(top = 4.dp)
+                        )
+                    }
+                }
+            } else {
+                Text(
+                    "Momentálně nejsou naplánovány žádné akce",
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
         }
     }
 }

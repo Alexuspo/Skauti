@@ -2,9 +2,28 @@ package alexus.studio.skauti.utils
 
 import com.google.firebase.database.FirebaseDatabase
 import alexus.studio.skauti.ui.Event
+import alexus.studio.skauti.ui.AppInfo
 
 object EventInitializer {
     private const val DATABASE_URL = "https://skauti-app-default-rtdb.europe-west1.firebasedatabase.app"
+
+    fun initializeAppInfo() {
+        val database = FirebaseDatabase.getInstance(DATABASE_URL)
+        val appInfoRef = database.getReference("appInfo")
+        
+        val appInfo = mapOf(
+            "version" to "2.1.0",
+            "author" to "Made by: Alexus"
+        )
+        
+        appInfoRef.setValue(appInfo)
+            .addOnSuccessListener {
+                println("Informace o aplikaci byly úspěšně inicializovány")
+            }
+            .addOnFailureListener { e ->
+                println("Chyba při inicializaci informací o aplikaci: ${e.message}")
+            }
+    }
 
     fun initializeEvents() {
         val database = FirebaseDatabase.getInstance(DATABASE_URL)

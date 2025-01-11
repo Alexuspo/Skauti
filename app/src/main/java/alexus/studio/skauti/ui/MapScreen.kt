@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.os.Bundle
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
@@ -76,6 +77,13 @@ fun MapScreen() {
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         hasLocationPermission = isGranted
+        if (isGranted) {
+            mapView?.let { map ->
+                val myLocationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(context), map)
+                myLocationOverlay.enableMyLocation()
+                map.overlays.add(myLocationOverlay)
+            }
+        }
     }
 
     LaunchedEffect(Unit) {
@@ -98,6 +106,14 @@ fun MapScreen() {
                     minZoomLevel = 12.0
                     maxZoomLevel = 18.0
 
+                    // Přidáme MyLocationOverlay pokud máme oprávnění
+                    if (hasLocationPermission) {
+                        val myLocationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(context), this)
+                        myLocationOverlay.enableMyLocation()
+                        overlays.add(myLocationOverlay)
+                    }
+
+                    // Přidáme markery pro skautské klubovny
                     scoutLocations.forEach { location ->
                         val marker = Marker(this).apply {
                             position = GeoPoint(location.latitude, location.longitude)
@@ -119,18 +135,27 @@ fun MapScreen() {
             onClick = {
                 if (hasLocationPermission) {
                     try {
-                        val lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-                        lastLocation?.let { location ->
-                            // Kontrola, zda je uživatel v oblasti Plzně
-                            if (isInPlzen(location.latitude, location.longitude)) {
+                        val locationListener = object : LocationListener {
+                            override fun onLocationChanged(location: Location) {
                                 mapView?.controller?.animateTo(
                                     GeoPoint(location.latitude, location.longitude)
                                 )
-                                showErrorMessage = false
-                            } else {
-                                showErrorMessage = true
+                                locationManager.removeUpdates(this)
                             }
+                            
+                            @Deprecated("Deprecated in Java")
+                            override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
+                            
+                            override fun onProviderEnabled(provider: String) {}
+                            override fun onProviderDisabled(provider: String) {}
                         }
+                        
+                        locationManager.requestLocationUpdates(
+                            LocationManager.GPS_PROVIDER,
+                            0L,
+                            0f,
+                            locationListener
+                        )
                     } catch (e: SecurityException) {
                         // Ošetření chyby oprávnění
                     }
@@ -141,22 +166,6 @@ fun MapScreen() {
                 .padding(16.dp)
         ) {
             Text("Moje poloha")
-        }
-
-        if (showErrorMessage) {
-            Surface(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .padding(16.dp),
-                color = MaterialTheme.colorScheme.errorContainer,
-                shape = MaterialTheme.shapes.medium
-            ) {
-                Text(
-                    "Nenacházíte se v Plzni :(",
-                    modifier = Modifier.padding(16.dp),
-                    color = MaterialTheme.colorScheme.onErrorContainer
-                )
-            }
         }
     }
 }

@@ -107,6 +107,7 @@ int dimen notification_small_icon_size_as_large 0x7f030014
 int dimen notification_subtext_size 0x7f030015
 int dimen notification_top_pad 0x7f030016
 int dimen notification_top_pad_large_text 0x7f030017
+int drawable alex 0x7f040046
 int drawable bonuspack_bubble 0x7f040001
 int drawable btn_moreinfo 0x7f040002
 int drawable center 0x7f040003

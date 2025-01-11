@@ -8,6 +8,7 @@ color purple_700
 color teal_200
 color teal_700
 color white
+drawable alex
 drawable ic_launcher_background
 drawable ic_launcher_foreground
 drawable logo

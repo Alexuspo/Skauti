@@ -108,6 +108,7 @@ dimen notification_small_icon_size_as_large
 dimen notification_subtext_size
 dimen notification_top_pad
 dimen notification_top_pad_large_text
+drawable alex
 drawable bonuspack_bubble
 drawable btn_moreinfo
 drawable center
