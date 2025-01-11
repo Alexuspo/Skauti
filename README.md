@@ -11,7 +11,7 @@ Pokud budete něco chtít kontaktujte mě! :D (@alexpomykacz)(discord)
 
 Postup vývoje aplikace:
 
-![75%](https://progress-bar.xyz/75)
+![80%](https://progress-bar.xyz/80)
 
 ## Implementované:✔️✔️✔️
 
