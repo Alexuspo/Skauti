@@ -18,8 +18,8 @@ Postup vývoje aplikace:
 - Napojení na API a přímé aktualizace kalendáře ✔️
 
 - Když příjde možnost zapsání se na akce přijde do aplikace. ✔️
+- Přihlašování pro rodiče abychom předešli nežádoucímu přihlašování náhodných lidí. ✔️
 ## Další věci co se chystají:
-- Přihlašování pro rodiče abychom předešli nežádoucímu přihlašování náhodných lidí.
 - Informace o nové aktualizaci na playstore přijde oznámení jako pop up okénko (až bude na playstore) 
 - Doladění chyb a bug fixů!
 
