@@ -603,13 +603,6 @@ fun MainScreen(
                                 showMenu = false
                             }
                         )
-                        DropdownMenuItem(
-                            text = { Text("Inicializovat info") },
-                            onClick = { 
-                                EventInitializer.initializeAppInfo()
-                                showMenu = false
-                            }
-                        )
                     }
                 }
             )
