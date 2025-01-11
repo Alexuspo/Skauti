@@ -8,11 +8,6 @@ Takže prakticky si můžete celou aplikaci vzít a předělat ji pro vlastní o
 
 Pokud budete něco chtít kontaktujte mě! :D (@alexpomykacz)(discord)
 
-Podpořte vývoj aplikace: 🤑💵💸
-
-1012075522/5500 
-
-Díky všem :3
 
 Postup vývoje aplikace:
 
@@ -32,3 +27,9 @@ Postup vývoje aplikace:
 
 Vizuál Web stránky na úpravu přes firebase:
 ![image](https://github.com/user-attachments/assets/56563871-fa7a-466d-95bc-28545d850164)
+
+Podpořte vývoj aplikace: 🤑💵💸
+
+1012075522/5500 
+
+Díky všem :3
