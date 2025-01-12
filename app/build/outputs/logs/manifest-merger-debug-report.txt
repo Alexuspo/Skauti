@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:2:1-44:12
-INJECTED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:2:1-44:12
-INJECTED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:2:1-44:12
-INJECTED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:2:1-44:12
+ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:2:1-52:12
+INJECTED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:2:1-52:12
+INJECTED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:2:1-52:12
+INJECTED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:2:1-52:12
 MERGED from [nl.dionsegijn:konfetti-compose:2.0.4] C:\Users\Alex\.gradle\caches\8.9\transforms\33ada6bf34482a44fa3f8673d58be787\transformed\konfetti-compose-2.0.4\AndroidManifest.xml:2:1-7:12
 MERGED from [com.google.firebase:firebase-database-ktx:20.3.0] C:\Users\Alex\.gradle\caches\8.9\transforms\e3c37cd543a699e89bfdf81a3adc7e19\transformed\firebase-database-ktx-20.3.0\AndroidManifest.xml:2:1-18:12
 MERGED from [com.google.firebase:firebase-analytics-ktx:21.5.0] C:\Users\Alex\.gradle\caches\8.9\transforms\4d1d2f5d1b33d0f15a52f4834b6cbc69\transformed\firebase-analytics-ktx-21.5.0\AndroidManifest.xml:2:1-17:12
@@ -196,9 +196,17 @@ MERGED from [com.google.firebase:firebase-messaging:23.4.0] C:\Users\Alex\.gradl
 MERGED from [com.google.firebase:firebase-messaging:23.4.0] C:\Users\Alex\.gradle\caches\8.9\transforms\e5439db2435fda32b34aa7f7d92823ce\transformed\firebase-messaging-23.4.0\AndroidManifest.xml:23:5-77
 	android:name
 		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:10:22-74
+uses-permission#android.permission.FOREGROUND_SERVICE
+ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:11:5-76
+	android:name
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:11:22-74
+uses-permission#android.permission.FOREGROUND_SERVICE_DATA_SYNC
+ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:12:5-86
+	android:name
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:12:22-84
 application
-ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:12:5-42:19
-INJECTED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:12:5-42:19
+ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:14:5-50:19
+INJECTED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:14:5-50:19
 MERGED from [com.google.firebase:firebase-database-ktx:20.3.0] C:\Users\Alex\.gradle\caches\8.9\transforms\e3c37cd543a699e89bfdf81a3adc7e19\transformed\firebase-database-ktx-20.3.0\AndroidManifest.xml:8:5-16:19
 MERGED from [com.google.firebase:firebase-database-ktx:20.3.0] C:\Users\Alex\.gradle\caches\8.9\transforms\e3c37cd543a699e89bfdf81a3adc7e19\transformed\firebase-database-ktx-20.3.0\AndroidManifest.xml:8:5-16:19
 MERGED from [com.google.firebase:firebase-analytics-ktx:21.5.0] C:\Users\Alex\.gradle\caches\8.9\transforms\4d1d2f5d1b33d0f15a52f4834b6cbc69\transformed\firebase-analytics-ktx-21.5.0\AndroidManifest.xml:7:5-15:19
@@ -278,57 +286,67 @@ MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\Alex\.gradle\cache
 	android:appComponentFactory
 		ADDED from [androidx.core:core:1.12.0] C:\Users\Alex\.gradle\caches\8.9\transforms\f65ba5f0ee565e076916b5030204b88b\transformed\core-1.12.0\AndroidManifest.xml:28:18-86
 	android:supportsRtl
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:20:9-35
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:22:9-35
 	android:label
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:18:9-41
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:20:9-41
 	android:fullBackupContent
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:16:9-54
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:18:9-54
 	android:roundIcon
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:19:9-54
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:21:9-54
 	tools:targetApi
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:22:9-29
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:24:9-29
 	android:icon
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:17:9-43
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:19:9-43
 	android:allowBackup
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:14:9-35
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:16:9-35
 	android:theme
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:21:9-44
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:23:9-44
 	android:dataExtractionRules
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:15:9-65
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:17:9-65
 	android:name
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:13:9-42
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:15:9-42
 service#alexus.studio.skauti.utils.NotificationService
-ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:24:9-30:19
+ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:26:9-32:19
 	android:exported
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:26:13-37
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:28:13-37
 	android:name
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:25:13-54
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:27:13-54
 intent-filter#action:name:com.google.firebase.MESSAGING_EVENT
-ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:27:13-29:29
+ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:29:13-31:29
 action#com.google.firebase.MESSAGING_EVENT
-ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:28:17-78
+ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:30:17-78
 	android:name
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:28:25-75
-activity#alexus.studio.skauti.MainActivity
-ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:32:9-41:20
-	android:label
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:35:13-45
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:30:25-75
+service#alexus.studio.skauti.services.BackgroundService
+ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:34:9-38:55
+	android:enabled
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:36:13-35
 	android:exported
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:34:13-36
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:37:13-37
+	android:foregroundServiceType
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:38:13-53
+	android:name
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:35:13-55
+activity#alexus.studio.skauti.MainActivity
+ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:40:9-49:20
+	android:label
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:43:13-45
+	android:exported
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:42:13-36
 	android:theme
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:36:13-48
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:44:13-48
 	android:name
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:33:13-41
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:41:13-41
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:37:13-40:29
+ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:45:13-48:29
 action#android.intent.action.MAIN
-ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:38:17-69
+ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:46:17-69
 	android:name
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:38:25-66
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:46:25-66
 category#android.intent.category.LAUNCHER
-ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:39:17-77
+ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:47:17-77
 	android:name
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:39:27-74
+		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:47:27-74
 uses-sdk
 INJECTED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml
