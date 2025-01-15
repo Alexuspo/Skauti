@@ -44,6 +44,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -87,7 +88,8 @@ data class Event(
     val participants: String = "",
     val eventDate: String = "",
     val registrationLink: String = "",
-    val registrationEnabled: Boolean = false
+    val registrationEnabled: Boolean = false,
+    val cancelled: Boolean = false
 ) {
     fun toLocalDate(): LocalDate {
         return try {
@@ -219,7 +221,7 @@ class EventViewModel : ViewModel() {
             .filter { event ->
                 try {
                     val eventDate = event.toLocalDate()
-                    eventDate.isAfter(currentDate.minusDays(1))
+                    eventDate.isAfter(currentDate.minusDays(1)) && !event.cancelled
                 } catch (e: Exception) {
                     false
                 }
@@ -451,50 +453,58 @@ fun EventCard(event: Event, context: Context, viewModel: EventViewModel) {
         ) {
             Text(
                 text = event.date,
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleMedium.copy(
+                    textDecoration = if (event.cancelled) TextDecoration.LineThrough else TextDecoration.None
+                ),
                 color = MaterialTheme.colorScheme.primary
             )
             Text(
                 text = event.name,
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleLarge.copy(
+                    textDecoration = if (event.cancelled) TextDecoration.LineThrough else TextDecoration.None
+                ),
                 modifier = Modifier.padding(vertical = 4.dp)
             )
             Text(
                 text = event.participants,
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    textDecoration = if (event.cancelled) TextDecoration.LineThrough else TextDecoration.None
+                ),
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             
-            Button(
-                onClick = {
-                    if (!isAuthenticated) {
-                        showAuthDialog = true
-                    } else if (event.registrationEnabled && event.registrationLink.isNotEmpty()) {
-                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(event.registrationLink))
-                        context.startActivity(intent)
-                    }
-                },
-                modifier = Modifier
-                    .align(Alignment.End)
-                    .padding(top = 8.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = if (event.registrationEnabled) 
-                        MaterialTheme.colorScheme.primary 
-                    else 
-                        MaterialTheme.colorScheme.surfaceVariant
-                ),
-                enabled = event.registrationEnabled && event.registrationLink.isNotEmpty()
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
+            if (!event.cancelled) {  // Zobrazím tlačítko pro přihlášení pouze pokud není událost zrušená
+                Button(
+                    onClick = {
+                        if (!isAuthenticated) {
+                            showAuthDialog = true
+                        } else if (event.registrationEnabled && event.registrationLink.isNotEmpty()) {
+                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(event.registrationLink))
+                            context.startActivity(intent)
+                        }
+                    },
+                    modifier = Modifier
+                        .align(Alignment.End)
+                        .padding(top = 8.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (event.registrationEnabled) 
+                            MaterialTheme.colorScheme.primary 
+                        else 
+                            MaterialTheme.colorScheme.surfaceVariant
+                    ),
+                    enabled = event.registrationEnabled && event.registrationLink.isNotEmpty()
                 ) {
-                    Icon(
-                        Icons.Default.Person,
-                        contentDescription = "Zapsat se",
-                        modifier = Modifier.padding(end = 8.dp)
-                    )
-                    Text(if (event.registrationEnabled) "Zapsat se" else "Zápis uzavřen")
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            Icons.Default.Person,
+                            contentDescription = "Zapsat se",
+                            modifier = Modifier.padding(end = 8.dp)
+                        )
+                        Text(if (event.registrationEnabled) "Zapsat se" else "Zápis uzavřen")
+                    }
                 }
             }
         }
