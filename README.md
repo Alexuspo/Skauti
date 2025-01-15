@@ -11,7 +11,7 @@ Pokud budete něco chtít kontaktujte mě! :D (@alexpomykacz)(discord)
 
 Postup vývoje aplikace:
 
-![80%](https://progress-bar.xyz/80)
+![85%](https://progress-bar.xyz/85)
 
 ## Implementované:✔️✔️✔️
 
@@ -27,7 +27,8 @@ Postup vývoje aplikace:
 ## Věci který bych chtěl jen možná přidat:
 - Přidání na mapu kde se jednotlivé akce budou konat.
 
-![Logo](https://media.discordapp.net/attachments/811869508074602536/1234964378491818044/received_3154746408156286.webp?ex=67803134&is=677edfb4&hm=7e064a8aa62bf7779788115a4b44628dbc09e4c7d9fbf59b917079a28925386e&=&format=webp&width=302&height=468)
+![logo](https://github.com/user-attachments/assets/d9df24b6-a650-4615-9195-7ce1a5b6d98e)
+
 
 Vizuál Web stránky na úpravu přes firebase:
 ![image](https://github.com/user-attachments/assets/56563871-fa7a-466d-95bc-28545d850164)
