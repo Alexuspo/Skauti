@@ -118,6 +118,7 @@ data class AppInfo(
 )
 
 class EventViewModel : ViewModel() {
+    private var valueEventListener: ValueEventListener? = null
     private val _events = MutableStateFlow<List<Event>>(emptyList())
     val events: StateFlow<List<Event>> = _events.asStateFlow()
     
@@ -133,15 +134,17 @@ class EventViewModel : ViewModel() {
     private val _isAuthenticated = MutableStateFlow(false)
     val isAuthenticated: StateFlow<Boolean> = _isAuthenticated.asStateFlow()
     
-    private var valueEventListener: ValueEventListener? = null
-    
     private val _appInfo = MutableStateFlow<AppInfo?>(null)
     val appInfo: StateFlow<AppInfo?> = _appInfo.asStateFlow()
+
+    private val _showUpdateDialog = MutableStateFlow(false)
+    val showUpdateDialog: StateFlow<Boolean> = _showUpdateDialog.asStateFlow()
 
     private var application: Application? = null
     
     companion object {
         private const val DATABASE_URL = "https://skauti-app-default-rtdb.europe-west1.firebasedatabase.app"
+        private const val GITHUB_RELEASE_URL = "https://github.com/Alexuspo/Skauti/releases"
     }
     
     init {
@@ -153,6 +156,7 @@ class EventViewModel : ViewModel() {
     fun initialize(app: Application) {
         application = app
         checkAuthentication()
+        checkAppVersion()
     }
 
     private fun testFirebaseConnection() {
@@ -241,6 +245,25 @@ class EventViewModel : ViewModel() {
                 val version = snapshot.child("version").getValue(String::class.java) ?: "2.1.0"
                 val author = snapshot.child("author").getValue(String::class.java) ?: "Made by: Alexus"
                 _appInfo.value = AppInfo(version, author)
+                
+                try {
+                    val inputStream = application?.assets?.open("version.txt")
+                    val localVersion = inputStream?.bufferedReader().use { it?.readText() }?.trim() ?: "0.0.0"
+                    val firebaseVersion = version.trim()
+                    
+                    println("Lokální verze: '$localVersion'")
+                    println("Firebase verze: '$firebaseVersion'")
+                    
+                    // Porovnání verzí s odstraněním bílých znaků
+                    val needsUpdate = localVersion.replace("\\s".toRegex(), "") != firebaseVersion.replace("\\s".toRegex(), "")
+                    println("Potřebuje aktualizaci: $needsUpdate")
+                    
+                    _showUpdateDialog.value = needsUpdate
+                } catch (e: Exception) {
+                    println("Chyba při čtení verze: ${e.message}")
+                    e.printStackTrace()
+                    _showUpdateDialog.value = false
+                }
             }
             
             override fun onCancelled(error: DatabaseError) {
@@ -269,6 +292,18 @@ class EventViewModel : ViewModel() {
         val database = FirebaseDatabase.getInstance(DATABASE_URL)
         val eventsRef = database.getReference("events")
         valueEventListener?.let { eventsRef.removeEventListener(it) }
+    }
+
+    private fun checkAppVersion() {
+        // Tato funkce už není potřeba, vše se děje v loadAppInfo
+    }
+
+    fun dismissUpdateDialog() {
+        _showUpdateDialog.value = false
+    }
+
+    fun getUpdateUrl(): String {
+        return GITHUB_RELEASE_URL
     }
 }
 
@@ -525,6 +560,30 @@ fun MainScreen(
     val currentRoute = currentBackStackEntry?.destination?.route ?: "home"
     val viewModel: EventViewModel = viewModel()
     val appInfo by viewModel.appInfo.collectAsState()
+    val showUpdateDialog by viewModel.showUpdateDialog.collectAsState()
+    val context = LocalContext.current
+
+    if (showUpdateDialog) {
+        AlertDialog(
+            onDismissRequest = { viewModel.dismissUpdateDialog() },
+            title = { Text("Nová verze k dispozici") },
+            text = { Text("Je k dispozici nová verze aplikace. Chcete ji stáhnout?") },
+            confirmButton = {
+                Button(onClick = {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(viewModel.getUpdateUrl()))
+                    context.startActivity(intent)
+                    viewModel.dismissUpdateDialog()
+                }) {
+                    Text("Aktualizovat")
+                }
+            },
+            dismissButton = {
+                Button(onClick = { viewModel.dismissUpdateDialog() }) {
+                    Text("Neaktualizovat")
+                }
+            }
+        )
+    }
 
     if (showAboutDialog) {
         AlertDialog(
