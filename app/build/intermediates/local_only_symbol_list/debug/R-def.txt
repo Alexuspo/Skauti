@@ -13,6 +13,7 @@ drawable ic_launcher_background
 drawable ic_launcher_foreground
 drawable logo
 drawable paja
+font skaut
 mipmap ic_launcher
 mipmap ic_launcher_foreground
 mipmap ic_launcher_round

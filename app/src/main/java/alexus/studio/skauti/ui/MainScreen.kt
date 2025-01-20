@@ -31,6 +31,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
@@ -81,6 +82,11 @@ import android.content.Context
 import android.app.Application
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 
 data class Event(
     val date: String = "",
@@ -563,6 +569,8 @@ fun MainScreen(
     val showUpdateDialog by viewModel.showUpdateDialog.collectAsState()
     val context = LocalContext.current
 
+    val colorScheme = if (isDarkTheme) DarkColorScheme else LightColorScheme
+    
     if (showUpdateDialog) {
         AlertDialog(
             onDismissRequest = { viewModel.dismissUpdateDialog() },
@@ -620,107 +628,128 @@ fun MainScreen(
         )
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("") },
-                actions = {
-                    IconButton(onClick = { showMenu = true }) {
-                        Icon(
-                            imageVector = Icons.Default.MoreVert,
-                            contentDescription = "Nastavení"
-                        )
+    MaterialTheme(
+        colorScheme = colorScheme,
+        typography = MaterialTheme.typography.copy(
+            displayLarge = MaterialTheme.typography.displayLarge.copy(fontFamily = skautFont),
+            displayMedium = MaterialTheme.typography.displayMedium.copy(fontFamily = skautFont),
+            displaySmall = MaterialTheme.typography.displaySmall.copy(fontFamily = skautFont),
+            headlineLarge = MaterialTheme.typography.headlineLarge.copy(fontFamily = skautFont),
+            headlineMedium = MaterialTheme.typography.headlineMedium.copy(fontFamily = skautFont),
+            headlineSmall = MaterialTheme.typography.headlineSmall.copy(fontFamily = skautFont),
+            titleLarge = MaterialTheme.typography.titleLarge.copy(fontFamily = skautFont),
+            titleMedium = MaterialTheme.typography.titleMedium.copy(fontFamily = skautFont),
+            titleSmall = MaterialTheme.typography.titleSmall.copy(fontFamily = skautFont),
+            bodyLarge = MaterialTheme.typography.bodyLarge.copy(fontFamily = skautFont),
+            bodyMedium = MaterialTheme.typography.bodyMedium.copy(fontFamily = skautFont),
+            bodySmall = MaterialTheme.typography.bodySmall.copy(fontFamily = skautFont),
+            labelLarge = MaterialTheme.typography.labelLarge.copy(fontFamily = skautFont),
+            labelMedium = MaterialTheme.typography.labelMedium.copy(fontFamily = skautFont),
+            labelSmall = MaterialTheme.typography.labelSmall.copy(fontFamily = skautFont)
+        )
+    ) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { Text("") },
+                    actions = {
+                        IconButton(onClick = { showMenu = true }) {
+                            Icon(
+                                imageVector = Icons.Default.MoreVert,
+                                contentDescription = "Nastavení"
+                            )
+                        }
+                        DropdownMenu(
+                            expanded = showMenu,
+                            onDismissRequest = { showMenu = false }
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text("Tmavý režim") },
+                                onClick = { },
+                                trailingIcon = {
+                                    Switch(
+                                        checked = isDarkTheme,
+                                        onCheckedChange = { 
+                                            onThemeChanged(it)
+                                            showMenu = false
+                                        }
+                                    )
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Kontrola připojení") },
+                                onClick = { 
+                                    viewModel.refreshData()
+                                    showMenu = false
+                                },
+                                trailingIcon = {
+                                    Text(
+                                        text = if (viewModel.connectionStatus.collectAsState().value.contains("připojen")) 
+                                            "✓" else "✗",
+                                        color = if (viewModel.connectionStatus.collectAsState().value.contains("připojen")) 
+                                            MaterialTheme.colorScheme.primary 
+                                        else 
+                                            MaterialTheme.colorScheme.error
+                                    )
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("O aplikaci") },
+                                onClick = { 
+                                    showAboutDialog = true
+                                    showMenu = false
+                                }
+                            )
+                        }
                     }
-                    DropdownMenu(
-                        expanded = showMenu,
-                        onDismissRequest = { showMenu = false }
-                    ) {
-                        DropdownMenuItem(
-                            text = { Text("Tmavý režim") },
-                            onClick = { },
-                            trailingIcon = {
-                                Switch(
-                                    checked = isDarkTheme,
-                                    onCheckedChange = { 
-                                        onThemeChanged(it)
-                                        showMenu = false
-                                    }
-                                )
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Kontrola připojení") },
-                            onClick = { 
-                                viewModel.refreshData()
-                                showMenu = false
-                            },
-                            trailingIcon = {
-                                Text(
-                                    text = if (viewModel.connectionStatus.collectAsState().value.contains("připojen")) 
-                                        "✓" else "✗",
-                                    color = if (viewModel.connectionStatus.collectAsState().value.contains("připojen")) 
-                                        MaterialTheme.colorScheme.primary 
-                                    else 
-                                        MaterialTheme.colorScheme.error
-                                )
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("O aplikaci") },
-                            onClick = { 
-                                showAboutDialog = true
-                                showMenu = false
-                            }
-                        )
-                    }
+                )
+            },
+            bottomBar = {
+                NavigationBar {
+                    NavigationBarItem(
+                        icon = { Icon(Icons.Default.Home, contentDescription = null) },
+                        label = { Text("Domů", style = MaterialTheme.typography.labelSmall) },
+                        selected = currentRoute == "home",
+                        onClick = { navController.navigate("home") }
+                    )
+                    NavigationBarItem(
+                        icon = { Icon(Icons.Default.DateRange, contentDescription = null) },
+                        label = { Text("Kalendář", style = MaterialTheme.typography.labelSmall) },
+                        selected = currentRoute == "calendar",
+                        onClick = { navController.navigate("calendar") }
+                    )
+                    NavigationBarItem(
+                        icon = { Icon(Icons.Default.Person, contentDescription = null) },
+                        label = { Text("Družiny", style = MaterialTheme.typography.labelSmall) },
+                        selected = currentRoute == "troops",
+                        onClick = { navController.navigate("troops") }
+                    )
+                    NavigationBarItem(
+                        icon = { Icon(Icons.Default.LocationOn, contentDescription = null) },
+                        label = { Text("Mapa", style = MaterialTheme.typography.labelSmall) },
+                        selected = currentRoute == "map",
+                        onClick = { navController.navigate("map") }
+                    )
+                    NavigationBarItem(
+                        icon = { Icon(Icons.Default.Info, contentDescription = null) },
+                        label = { Text("O oddíle", style = MaterialTheme.typography.labelSmall) },
+                        selected = currentRoute == "about",
+                        onClick = { navController.navigate("about") }
+                    )
                 }
-            )
-        },
-        bottomBar = {
-            NavigationBar {
-                NavigationBarItem(
-                    icon = { Icon(Icons.Default.Home, contentDescription = null) },
-                    label = { Text("Domů") },
-                    selected = currentRoute == "home",
-                    onClick = { navController.navigate("home") }
-                )
-                NavigationBarItem(
-                    icon = { Icon(Icons.Default.DateRange, contentDescription = null) },
-                    label = { Text("Kalendář") },
-                    selected = currentRoute == "calendar",
-                    onClick = { navController.navigate("calendar") }
-                )
-                NavigationBarItem(
-                    icon = { Icon(Icons.Default.Person, contentDescription = null) },
-                    label = { Text("Družiny") },
-                    selected = currentRoute == "troops",
-                    onClick = { navController.navigate("troops") }
-                )
-                NavigationBarItem(
-                    icon = { Icon(Icons.Default.LocationOn, contentDescription = null) },
-                    label = { Text("Mapa") },
-                    selected = currentRoute == "map",
-                    onClick = { navController.navigate("map") }
-                )
-                NavigationBarItem(
-                    icon = { Icon(Icons.Default.Info, contentDescription = null) },
-                    label = { Text("O oddíle") },
-                    selected = currentRoute == "about",
-                    onClick = { navController.navigate("about") }
-                )
             }
-        }
-    ) { paddingValues ->
-        NavHost(
-            navController = navController,
-            startDestination = "home",
-            modifier = Modifier.padding(paddingValues)
-        ) {
-            composable("home") { HomeScreen(navController, viewModel) }
-            composable("calendar") { CalendarScreen(viewModel) }
-            composable("troops") { TroopsScreen() }
-            composable("about") { AboutScreen(isDarkTheme, onThemeChanged) }
-            composable("map") { MapScreen() }
+        ) { paddingValues ->
+            NavHost(
+                navController = navController,
+                startDestination = "home",
+                modifier = Modifier.padding(paddingValues)
+            ) {
+                composable("home") { HomeScreen(navController, viewModel) }
+                composable("calendar") { CalendarScreen(viewModel) }
+                composable("troops") { TroopsScreen() }
+                composable("about") { AboutScreen(isDarkTheme, onThemeChanged) }
+                composable("map") { MapScreen() }
+            }
         }
     }
 }
@@ -1300,4 +1329,11 @@ private fun addEventsToFirebase() {
     events.forEach { event ->
         eventsRef.push().setValue(event)
     }
-} 
+}
+
+private val skautFont = FontFamily(
+    Font(R.font.skaut, FontWeight.Normal)
+)
+
+private val DarkColorScheme = darkColorScheme()
+private val LightColorScheme = lightColorScheme() 
