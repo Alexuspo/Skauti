@@ -3,7 +3,8 @@
 
 Jednoduchá aplikace pro skautský oddíl a nadcházejícími akcemi družinek a dálších věcí.
 
-Aplikace je open-source takže všechny informace o ní a jak funguje jsou zde 
+Aplikace je open-source takže všechny informace o ní a jak funguje jsou zde. 
+
 Takže prakticky si můžete celou aplikaci vzít a předělat ji pro vlastní oddíl.
 
 Pokud budete něco chtít kontaktujte mě! :D (@alexpomykacz)(discord)
@@ -11,7 +12,7 @@ Pokud budete něco chtít kontaktujte mě! :D (@alexpomykacz)(discord)
 
 Postup vývoje aplikace:
 
-![85%](https://progress-bar.xyz/85)
+![90%](https://progress-bar.xyz/90)
 
 ## Implementované:✔️✔️✔️
 
