@@ -38,3 +38,7 @@ Podpořte vývoj aplikace: 🤑💵💸
 1012075522/5500 
 
 Díky všem :3
+
+Skauti © 2025 by Alexandr Pomykacz is licensed under Creative Commons Attribution-NonCommercial 4.0 International 
+
+![Snímek obrazovky 2025-01-23 103253](https://github.com/user-attachments/assets/c702fed2-9ed9-4802-b93e-8c44486fd21c)
