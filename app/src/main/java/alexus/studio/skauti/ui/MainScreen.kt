@@ -827,13 +827,12 @@ fun HomeScreen(
         }
 
         Button(
-            onClick = {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://eu.zonerama.com/Pardi/1364990"))
+            onClick = { 
+                // Open the specified URL in a browser
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://eu.zonerama.com/42Fenix43Pardi/"))
                 context.startActivity(intent)
             },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
+            modifier = Modifier.fillMaxWidth()
         ) {
             Row(
                 horizontalArrangement = Arrangement.Center,
