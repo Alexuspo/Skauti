@@ -80,9 +80,15 @@ class SkautiApplication : Application() {
                 val event = snapshot.getValue(Event::class.java)
                 event?.let {
                     val oldEvent = lastKnownEvents[snapshot.key]
-                    if (oldEvent?.registrationLink != it.registrationLink && it.registrationEnabled && !it.registrationLink.isNullOrEmpty()) {
+                    // Commenting out the notification logic
+                    /*
+                    if (oldEvent?.registrationLink != it.registrationLink && 
+                        it.registrationEnabled && 
+                        !it.registrationLink.isNullOrEmpty()
+                    ) {
                         showNotification("Aktualizace přihlašování", "Byl přidán odkaz na přihlášení pro událost: ${it.name}")
                     }
+                    */
                     lastKnownEvents[snapshot.key ?: ""] = it
                 }
             }

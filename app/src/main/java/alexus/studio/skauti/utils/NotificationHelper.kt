@@ -13,6 +13,8 @@ object NotificationHelper {
     private const val NOTIFICATION_ID = 1
 
     fun showNotification(context: Context, title: String, message: String) {
+        // Commenting out the notification logic
+        /*
         createNotificationChannel(context)
         
         if (!NotificationManagerCompat.from(context).areNotificationsEnabled()) {
@@ -27,6 +29,7 @@ object NotificationHelper {
             .setAutoCancel(true)
 
         NotificationManagerCompat.from(context).notify(NOTIFICATION_ID, builder.build())
+        */
     }
 
     private fun createNotificationChannel(context: Context) {

@@ -93,6 +93,8 @@ class BackgroundService : Service() {
                     val event = snapshot.getValue(Event::class.java)
                     event?.let {
                         val oldEvent = lastKnownEvents[snapshot.key]
+                        // Commenting out the notification logic
+                        /*
                         if (oldEvent?.registrationLink != it.registrationLink && 
                             it.registrationEnabled && 
                             !it.registrationLink.isNullOrEmpty()
@@ -100,9 +102,10 @@ class BackgroundService : Service() {
                             NotificationHelper.showNotification(
                                 context = applicationContext,
                                 title = "Aktualizace přihlašování",
-                                message = "Byl přidán odkaz na přihlášení pro událost: ${it.name}"
+                                message = "Byla přidána možnost přihlášení na událost: ${it.name}"
                             )
                         }
+                        */
                         lastKnownEvents[snapshot.key ?: ""] = it
                     }
                 }

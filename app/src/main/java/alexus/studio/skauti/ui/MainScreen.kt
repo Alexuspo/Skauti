@@ -710,31 +710,36 @@ fun MainScreen(
                         icon = { Icon(Icons.Default.Home, contentDescription = null) },
                         label = { Text("Domů", style = MaterialTheme.typography.labelSmall) },
                         selected = currentRoute == "home",
-                        onClick = { navController.navigate("home") }
+                        onClick = { navController.navigate("home") },
+                        modifier = Modifier.weight(1f)
                     )
                     NavigationBarItem(
                         icon = { Icon(Icons.Default.DateRange, contentDescription = null) },
                         label = { Text("Kalendář", style = MaterialTheme.typography.labelSmall) },
                         selected = currentRoute == "calendar",
-                        onClick = { navController.navigate("calendar") }
+                        onClick = { navController.navigate("calendar") },
+                        modifier = Modifier.weight(1f)
                     )
                     NavigationBarItem(
                         icon = { Icon(Icons.Default.Person, contentDescription = null) },
                         label = { Text("Družiny", style = MaterialTheme.typography.labelSmall) },
                         selected = currentRoute == "troops",
-                        onClick = { navController.navigate("troops") }
+                        onClick = { navController.navigate("troops") },
+                        modifier = Modifier.weight(1f)
                     )
                     NavigationBarItem(
                         icon = { Icon(Icons.Default.LocationOn, contentDescription = null) },
                         label = { Text("Mapa", style = MaterialTheme.typography.labelSmall) },
                         selected = currentRoute == "map",
-                        onClick = { navController.navigate("map") }
+                        onClick = { navController.navigate("map") },
+                        modifier = Modifier.weight(1f)
                     )
                     NavigationBarItem(
                         icon = { Icon(Icons.Default.Info, contentDescription = null) },
                         label = { Text("O oddíle", style = MaterialTheme.typography.labelSmall) },
                         selected = currentRoute == "about",
-                        onClick = { navController.navigate("about") }
+                        onClick = { navController.navigate("about") },
+                        modifier = Modifier.weight(1f)
                     )
                 }
             }
