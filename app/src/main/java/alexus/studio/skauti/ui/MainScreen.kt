@@ -87,6 +87,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.LinearProgressIndicator
 
 data class Event(
     val date: String = "",
@@ -385,8 +386,23 @@ fun CalendarScreen(viewModel: EventViewModel = viewModel()) {
         val upcomingEvents = events
             .filter { event ->
                 try {
-                    val eventDate = event.toLocalDate()
-                    eventDate.isAfter(currentDate.minusDays(1))
+                    val dateRange = event.date.split(" - ")
+                    val startDate = if (dateRange[0].contains(".")) {
+                        val parts = dateRange[0].split(".")
+                        LocalDate.of(parts[2].toInt(), parts[1].toInt(), parts[0].toInt())
+                    } else {
+                        LocalDate.parse(event.eventDate)
+                    }
+                    
+                    val endDate = if (dateRange.size > 1 && dateRange[1].contains(".")) {
+                        val parts = dateRange[1].split(".")
+                        LocalDate.of(parts[2].toInt(), parts[1].toInt(), parts[0].toInt())
+                    } else {
+                        startDate
+                    }
+                    
+                    // Událost je nadcházející, pokud končí dnes nebo v budoucnu
+                    !endDate.isBefore(LocalDate.now())
                 } catch (e: Exception) {
                     println("Chyba při filtrování události ${event.name}: ${e.message}")
                     false
@@ -397,8 +413,18 @@ fun CalendarScreen(viewModel: EventViewModel = viewModel()) {
         val pastEvents = events
             .filter { event ->
                 try {
-                    val eventDate = event.toLocalDate()
-                    eventDate.isBefore(currentDate)
+                    val dateRange = event.date.split(" - ")
+                    val endDate = if (dateRange.size > 1 && dateRange[1].contains(".")) {
+                        val parts = dateRange[1].split(".")
+                        LocalDate.of(parts[2].toInt(), parts[1].toInt(), parts[0].toInt())
+                    } else if (dateRange[0].contains(".")) {
+                        val parts = dateRange[0].split(".")
+                        LocalDate.of(parts[2].toInt(), parts[1].toInt(), parts[0].toInt())
+                    } else {
+                        LocalDate.parse(event.eventDate)
+                    }
+                    // Událost je proběhlá, pouze pokud skončila před dneškem
+                    endDate.isBefore(LocalDate.now())
                 } catch (e: Exception) {
                     println("Chyba při filtrování události ${event.name}: ${e.message}")
                     false
@@ -449,6 +475,42 @@ fun EventCard(event: Event, context: Context, viewModel: EventViewModel) {
     var showAuthDialog by remember { mutableStateOf(false) }
     var password by remember { mutableStateOf("") }
     val isAuthenticated by viewModel.isAuthenticated.collectAsState()
+    
+    // Parse start and end dates for the event
+    val dateRange = event.date.split(" - ")
+    val startDate = try {
+        if (dateRange[0].contains(".")) {
+            val parts = dateRange[0].split(".")
+            LocalDate.of(parts[2].toInt(), parts[1].toInt(), parts[0].toInt())
+        } else {
+            LocalDate.parse(event.eventDate)
+        }
+    } catch (e: Exception) {
+        LocalDate.now()
+    }
+    
+    val endDate = try {
+        if (dateRange.size > 1 && dateRange[1].contains(".")) {
+            val parts = dateRange[1].split(".")
+            LocalDate.of(parts[2].toInt(), parts[1].toInt(), parts[0].toInt())
+        } else {
+            startDate
+        }
+    } catch (e: Exception) {
+        startDate
+    }
+    
+    val currentDate = LocalDate.now()
+    val isOngoing = !currentDate.isBefore(startDate) && !currentDate.isAfter(endDate)
+    
+    // Calculate progress for ongoing events
+    val progress = if (isOngoing) {
+        val totalDays = ChronoUnit.DAYS.between(startDate, endDate) + 1
+        val daysElapsed = ChronoUnit.DAYS.between(startDate, currentDate) + 1
+        (daysElapsed.toFloat() / totalDays.toFloat()).coerceIn(0f, 1f)
+    } else {
+        0f
+    }
 
     if (showAuthDialog) {
         AlertDialog(
@@ -514,7 +576,29 @@ fun EventCard(event: Event, context: Context, viewModel: EventViewModel) {
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             
-            if (!event.cancelled) {  // Zobrazím tlačítko pro přihlášení pouze pokud není událost zrušená
+            // Show progress for ongoing events
+            if (isOngoing && !event.cancelled) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp)
+                ) {
+                    Text(
+                        text = "Akce právě probíhá",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(bottom = 4.dp)
+                    )
+                    LinearProgressIndicator(
+                        progress = progress,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(8.dp)
+                    )
+                }
+            }
+            
+            if (!event.cancelled) {
                 Button(
                     onClick = {
                         if (!isAuthenticated) {
@@ -1292,8 +1376,7 @@ fun BirthdayConfetti() {
             drawCircle(
                     color = particle.color.copy(alpha = 0.9f),
                     radius = particle.size,
-                    center = Offset(0f, 0f)
-                )
+                    center = Offset(0f, 0f))
             }
         }
     }
