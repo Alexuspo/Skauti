@@ -190,20 +190,6 @@ uses-permission#android.permission.ACCESS_COARSE_LOCATION
 ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:9:5-80
 	android:name
 		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:9:22-78
-uses-permission#android.permission.POST_NOTIFICATIONS
-ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:10:5-76
-MERGED from [com.google.firebase:firebase-messaging:23.4.0] C:\Users\Alex\.gradle\caches\8.9\transforms\e5439db2435fda32b34aa7f7d92823ce\transformed\firebase-messaging-23.4.0\AndroidManifest.xml:23:5-77
-MERGED from [com.google.firebase:firebase-messaging:23.4.0] C:\Users\Alex\.gradle\caches\8.9\transforms\e5439db2435fda32b34aa7f7d92823ce\transformed\firebase-messaging-23.4.0\AndroidManifest.xml:23:5-77
-	android:name
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:10:22-74
-uses-permission#android.permission.FOREGROUND_SERVICE
-ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:11:5-76
-	android:name
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:11:22-74
-uses-permission#android.permission.FOREGROUND_SERVICE_DATA_SYNC
-ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:12:5-86
-	android:name
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:12:22-84
 application
 ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:14:5-50:19
 INJECTED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:14:5-50:19
@@ -305,28 +291,6 @@ MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\Alex\.gradle\cache
 		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:17:9-65
 	android:name
 		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:15:9-42
-service#alexus.studio.skauti.utils.NotificationService
-ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:26:9-32:19
-	android:exported
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:28:13-37
-	android:name
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:27:13-54
-intent-filter#action:name:com.google.firebase.MESSAGING_EVENT
-ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:29:13-31:29
-action#com.google.firebase.MESSAGING_EVENT
-ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:30:17-78
-	android:name
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:30:25-75
-service#alexus.studio.skauti.services.BackgroundService
-ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:34:9-38:55
-	android:enabled
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:36:13-35
-	android:exported
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:37:13-37
-	android:foregroundServiceType
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:38:13-53
-	android:name
-		ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:35:13-55
 activity#alexus.studio.skauti.MainActivity
 ADDED from C:\Users\Alex\AndroidStudioProjects\Skauti\app\src\main\AndroidManifest.xml:40:9-49:20
 	android:label
@@ -619,6 +583,10 @@ ADDED from [com.google.firebase:firebase-analytics-ktx:21.5.0] C:\Users\Alex\.gr
 		ADDED from [com.google.firebase:firebase-analytics-ktx:21.5.0] C:\Users\Alex\.gradle\caches\8.9\transforms\4d1d2f5d1b33d0f15a52f4834b6cbc69\transformed\firebase-analytics-ktx-21.5.0\AndroidManifest.xml:13:17-82
 	android:name
 		ADDED from [com.google.firebase:firebase-analytics-ktx:21.5.0] C:\Users\Alex\.gradle\caches\8.9\transforms\4d1d2f5d1b33d0f15a52f4834b6cbc69\transformed\firebase-analytics-ktx-21.5.0\AndroidManifest.xml:12:17-129
+uses-permission#android.permission.POST_NOTIFICATIONS
+ADDED from [com.google.firebase:firebase-messaging:23.4.0] C:\Users\Alex\.gradle\caches\8.9\transforms\e5439db2435fda32b34aa7f7d92823ce\transformed\firebase-messaging-23.4.0\AndroidManifest.xml:23:5-77
+	android:name
+		ADDED from [com.google.firebase:firebase-messaging:23.4.0] C:\Users\Alex\.gradle\caches\8.9\transforms\e5439db2435fda32b34aa7f7d92823ce\transformed\firebase-messaging-23.4.0\AndroidManifest.xml:23:22-74
 uses-permission#android.permission.WAKE_LOCK
 ADDED from [com.google.firebase:firebase-messaging:23.4.0] C:\Users\Alex\.gradle\caches\8.9\transforms\e5439db2435fda32b34aa7f7d92823ce\transformed\firebase-messaging-23.4.0\AndroidManifest.xml:24:5-68
 MERGED from [com.google.android.gms:play-services-measurement-api:21.5.0] C:\Users\Alex\.gradle\caches\8.9\transforms\d7e92084023ce4da577af03addd5b9b7\transformed\play-services-measurement-api-21.5.0\AndroidManifest.xml:24:5-68
@@ -667,6 +635,14 @@ ADDED from [com.google.firebase:firebase-messaging:23.4.0] C:\Users\Alex\.gradle
 		ADDED from [com.google.firebase:firebase-messaging:23.4.0] C:\Users\Alex\.gradle\caches\8.9\transforms\e5439db2435fda32b34aa7f7d92823ce\transformed\firebase-messaging-23.4.0\AndroidManifest.xml:48:13-43
 	android:name
 		ADDED from [com.google.firebase:firebase-messaging:23.4.0] C:\Users\Alex\.gradle\caches\8.9\transforms\e5439db2435fda32b34aa7f7d92823ce\transformed\firebase-messaging-23.4.0\AndroidManifest.xml:47:13-82
+intent-filter#action:name:com.google.firebase.MESSAGING_EVENT
+ADDED from [com.google.firebase:firebase-messaging:23.4.0] C:\Users\Alex\.gradle\caches\8.9\transforms\e5439db2435fda32b34aa7f7d92823ce\transformed\firebase-messaging-23.4.0\AndroidManifest.xml:50:13-52:29
+	android:priority
+		ADDED from [com.google.firebase:firebase-messaging:23.4.0] C:\Users\Alex\.gradle\caches\8.9\transforms\e5439db2435fda32b34aa7f7d92823ce\transformed\firebase-messaging-23.4.0\AndroidManifest.xml:50:28-51
+action#com.google.firebase.MESSAGING_EVENT
+ADDED from [com.google.firebase:firebase-messaging:23.4.0] C:\Users\Alex\.gradle\caches\8.9\transforms\e5439db2435fda32b34aa7f7d92823ce\transformed\firebase-messaging-23.4.0\AndroidManifest.xml:51:17-78
+	android:name
+		ADDED from [com.google.firebase:firebase-messaging:23.4.0] C:\Users\Alex\.gradle\caches\8.9\transforms\e5439db2435fda32b34aa7f7d92823ce\transformed\firebase-messaging-23.4.0\AndroidManifest.xml:51:25-75
 meta-data#com.google.firebase.components:com.google.firebase.messaging.FirebaseMessagingKtxRegistrar
 ADDED from [com.google.firebase:firebase-messaging:23.4.0] C:\Users\Alex\.gradle\caches\8.9\transforms\e5439db2435fda32b34aa7f7d92823ce\transformed\firebase-messaging-23.4.0\AndroidManifest.xml:57:13-59:85
 	android:value

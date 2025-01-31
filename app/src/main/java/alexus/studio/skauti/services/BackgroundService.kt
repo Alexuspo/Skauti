@@ -24,40 +24,7 @@ class BackgroundService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        createForegroundNotificationChannel()
-        startForeground(FOREGROUND_NOTIFICATION_ID, createForegroundNotification())
         setupFirebaseListener()
-    }
-
-    private fun createForegroundNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "Služba na pozadí"
-            val descriptionText = "Služba pro kontrolu nových událostí"
-            val importance = NotificationManager.IMPORTANCE_LOW
-            val channel = NotificationChannel(FOREGROUND_CHANNEL_ID, name, importance).apply {
-                description = descriptionText
-                setShowBadge(false)
-            }
-            val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
-        }
-    }
-
-    private fun createForegroundNotification(): Notification {
-        val notificationIntent = Intent(this, MainActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(
-            this, 0, notificationIntent,
-            PendingIntent.FLAG_IMMUTABLE
-        )
-
-        return NotificationCompat.Builder(this, FOREGROUND_CHANNEL_ID)
-            .setContentTitle("Skauti")
-            .setContentText("Kontroluji nové události")
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentIntent(pendingIntent)
-            .setSilent(true)
-            .setOngoing(true)
-            .build()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -78,13 +45,6 @@ class BackgroundService : Service() {
                     event?.let {
                         if (!lastKnownEvents.containsKey(snapshot.key)) {
                             lastKnownEvents[snapshot.key ?: ""] = it
-                            if (it.registrationEnabled && !it.registrationLink.isNullOrEmpty()) {
-                                NotificationHelper.showNotification(
-                                    context = applicationContext,
-                                    title = "Nová možnost přihlášení",
-                                    message = "Byla přidána možnost přihlášení na událost: ${it.name}"
-                                )
-                            }
                         }
                     }
                 }
@@ -92,20 +52,6 @@ class BackgroundService : Service() {
                 override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
                     val event = snapshot.getValue(Event::class.java)
                     event?.let {
-                        val oldEvent = lastKnownEvents[snapshot.key]
-                        // Commenting out the notification logic
-                        /*
-                        if (oldEvent?.registrationLink != it.registrationLink && 
-                            it.registrationEnabled && 
-                            !it.registrationLink.isNullOrEmpty()
-                        ) {
-                            NotificationHelper.showNotification(
-                                context = applicationContext,
-                                title = "Aktualizace přihlašování",
-                                message = "Byla přidána možnost přihlášení na událost: ${it.name}"
-                            )
-                        }
-                        */
                         lastKnownEvents[snapshot.key ?: ""] = it
                     }
                 }

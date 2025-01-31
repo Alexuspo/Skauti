@@ -12,8 +12,8 @@ android {
         applicationId = "alexus.studio.skauti"
         minSdk = 26
         targetSdk = 34
-        versionCode = 3
-        versionName = "2.3.0"
+        versionCode = 7
+        versionName = "2.3.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

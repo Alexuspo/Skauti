@@ -46,6 +46,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -88,6 +89,44 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.LinearProgressIndicator
+import alexus.studio.skauti.ui.TroopsScreen
+import androidx.compose.runtime.mutableStateOf
+
+private val skautFont = FontFamily(
+    Font(R.font.skaut, FontWeight.Normal)
+)
+
+private val DarkColorScheme = darkColorScheme()
+private val LightColorScheme = lightColorScheme()
+
+@Composable
+private fun UpdateDialog(onDismiss: () -> Unit) {
+    val context = LocalContext.current
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Dostupná aktualizace") },
+        text = { Text("Je k dispozici nová verze aplikace. Chcete ji nainstalovat?") },
+        confirmButton = {
+            Button(
+                onClick = {
+                    val intent = Intent(Intent.ACTION_VIEW).apply {
+                        data = Uri.parse("https://play.google.com/store/apps/details?id=alexus.studio.skauti")
+                        setPackage("com.android.vending")
+                    }
+                    context.startActivity(intent)
+                    onDismiss()
+                }
+            ) {
+                Text("Aktualizovat")
+            }
+        },
+        dismissButton = {
+            Button(onClick = onDismiss) {
+                Text("Později")
+            }
+        }
+    )
+}
 
 data class Event(
     val date: String = "",
@@ -656,25 +695,7 @@ fun MainScreen(
     val colorScheme = if (isDarkTheme) DarkColorScheme else LightColorScheme
     
     if (showUpdateDialog) {
-        AlertDialog(
-            onDismissRequest = { viewModel.dismissUpdateDialog() },
-            title = { Text("Nová verze k dispozici") },
-            text = { Text("Je k dispozici nová verze aplikace. Chcete ji stáhnout?") },
-            confirmButton = {
-                Button(onClick = {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(viewModel.getUpdateUrl()))
-                    context.startActivity(intent)
-                    viewModel.dismissUpdateDialog()
-                }) {
-                    Text("Aktualizovat")
-                }
-            },
-            dismissButton = {
-                Button(onClick = { viewModel.dismissUpdateDialog() }) {
-                    Text("Neaktualizovat")
-                }
-            }
-        )
+        UpdateDialog { viewModel.dismissUpdateDialog() }
     }
 
     if (showAboutDialog) {
@@ -792,35 +813,35 @@ fun MainScreen(
                 NavigationBar {
                     NavigationBarItem(
                         icon = { Icon(Icons.Default.Home, contentDescription = null) },
-                        label = { Text("Domů", style = MaterialTheme.typography.labelSmall) },
+                        label = { Text("Domů", style = MaterialTheme.typography.labelSmall, maxLines = 1, overflow = TextOverflow.Ellipsis) },
                         selected = currentRoute == "home",
                         onClick = { navController.navigate("home") },
                         modifier = Modifier.weight(1f)
                     )
                     NavigationBarItem(
                         icon = { Icon(Icons.Default.DateRange, contentDescription = null) },
-                        label = { Text("Kalendář", style = MaterialTheme.typography.labelSmall) },
+                        label = { Text("Kalendář", style = MaterialTheme.typography.labelSmall, maxLines = 1, overflow = TextOverflow.Ellipsis) },
                         selected = currentRoute == "calendar",
                         onClick = { navController.navigate("calendar") },
                         modifier = Modifier.weight(1f)
                     )
                     NavigationBarItem(
                         icon = { Icon(Icons.Default.Person, contentDescription = null) },
-                        label = { Text("Družiny", style = MaterialTheme.typography.labelSmall) },
+                        label = { Text("Družiny", style = MaterialTheme.typography.labelSmall, maxLines = 1, overflow = TextOverflow.Ellipsis) },
                         selected = currentRoute == "troops",
                         onClick = { navController.navigate("troops") },
                         modifier = Modifier.weight(1f)
                     )
                     NavigationBarItem(
                         icon = { Icon(Icons.Default.LocationOn, contentDescription = null) },
-                        label = { Text("Mapa", style = MaterialTheme.typography.labelSmall) },
+                        label = { Text("Mapa", style = MaterialTheme.typography.labelSmall, maxLines = 1, overflow = TextOverflow.Ellipsis) },
                         selected = currentRoute == "map",
                         onClick = { navController.navigate("map") },
                         modifier = Modifier.weight(1f)
                     )
                     NavigationBarItem(
                         icon = { Icon(Icons.Default.Info, contentDescription = null) },
-                        label = { Text("O oddíle", style = MaterialTheme.typography.labelSmall) },
+                        label = { Text("O oddíle", style = MaterialTheme.typography.labelSmall, maxLines = 1, overflow = TextOverflow.Ellipsis) },
                         selected = currentRoute == "about",
                         onClick = { navController.navigate("about") },
                         modifier = Modifier.weight(1f)
@@ -981,446 +1002,8 @@ fun HomeScreen(
     }
 }
 
-@Composable
-fun AboutScreen(isDarkTheme: Boolean, onThemeChanged: (Boolean) -> Unit) {
-    var showBirthdayDialog by remember { mutableStateOf(false) }
-    var clickCount by remember { mutableStateOf(0) }
-    var showConfetti by remember { mutableStateOf(false) }
-    
-    // Datum narozenin (27. dubna)
-    val birthdayDate = LocalDate.of(LocalDate.now().year, 4, 27)
-    // Pokud už narozeniny tento rok byly, přičteme rok
-    val nextBirthday = if (birthdayDate.isBefore(LocalDate.now())) {
-        birthdayDate.plusYears(1)
-    } else {
-        birthdayDate
-    }
-    
-    // Výpočet dnů do narozenin
-    val daysUntilBirthday = ChronoUnit.DAYS.between(LocalDate.now(), nextBirthday)
-
-    if (showConfetti) {
-        BirthdayConfetti()
-    }
-    
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        item {
-            Text(
-                "O oddílu",
-                style = MaterialTheme.typography.headlineMedium,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                ) {
-                    Text(
-                        text = "O oddílu",
-                        style = MaterialTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.padding(bottom = 12.dp)
-                    )
-                    
-                    Text(
-                        text = "Jsme chlapecký oddíl z křesťanského střediska Ichthys s více než dvacetipětiletou historií.",
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.padding(bottom = 8.dp)
-                    )
-                    
-                    Text(
-                        text = "Klubovnu máme v Plzni na Slovanech v areálu dominikánského kláštera, kde probíhají jednotlivé " +
-                              "schůzky družin, turnaje v deskových hrách či sportovní aktivity a podobně.",
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.padding(bottom = 8.dp)
-                    )
-                    
-                    Text(
-                        text = "Přibližně jednou za měsíc pořádáme jednodenní výpravy do přírody, občas se vydáme na vícedenní " +
-                              "akci a o prázdninách nás čeká tábor na louce u říčky Úhlavky nedaleko Kladrub.",
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                }
-            }
-
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                ) {
-                    Text(
-                        text = "Kontaktní informace",
-                        style = MaterialTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.padding(bottom = 12.dp)
-                    )
-                    
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        // Levá strana s kontaktními informacemi
-                        Column(
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            Text(
-                                text = "Vedoucí oddílu",
-                                style = MaterialTheme.typography.titleMedium,
-                                modifier = Modifier.padding(bottom = 8.dp)
-                            )
-                            
-                            Text(
-                                text = "Pavel Balda",
-                                style = MaterialTheme.typography.bodyLarge,
-                                modifier = Modifier.padding(bottom = 4.dp)
-                            )
-                            
-                            Row(
-                                modifier = Modifier.padding(bottom = 4.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Icon(
-                                    Icons.Default.Phone,
-                                    contentDescription = "Telefon",
-                                    modifier = Modifier.padding(end = 8.dp),
-                                    tint = MaterialTheme.colorScheme.primary
-                                )
-                                Text(
-                                    text = "777 362 036",
-                                    style = MaterialTheme.typography.bodyLarge
-                                )
-                            }
-                            
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Icon(
-                                    Icons.Default.Email,
-                                    contentDescription = "Email",
-                                    modifier = Modifier.padding(end = 8.dp),
-                                    tint = MaterialTheme.colorScheme.primary
-                                )
-                                Text(
-                                    text = "pardi@skaut.cz",
-                                    style = MaterialTheme.typography.bodyLarge
-                                )
-                            }
-                        }
-                        
-                        // Pravá strana s obrázkem
-                        Image(
-                            painter = painterResource(id = R.drawable.paja),
-                            contentDescription = "Vedoucí oddílu",
-                            modifier = Modifier
-                                .size(150.dp)
-                                .padding(start = 16.dp)
-                                .clickable {
-                                    clickCount++
-                                    if (clickCount >= 3) {
-                                        showBirthdayDialog = true
-                                        showConfetti = true
-                                        clickCount = 0
-                                    }
-                                }
-                        )
-                    }
-                }
-            }
-        }
-    }
-
-    if (showBirthdayDialog) {
-        AlertDialog(
-            onDismissRequest = { 
-                showBirthdayDialog = false
-                showConfetti = false
-            },
-            title = { Text("Do narozenin zbývá", textAlign = TextAlign.Center) },
-            text = { 
-                Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                        .height(200.dp)
-                    ) {
-                    if (showConfetti) {
-                        BirthdayConfetti()
-                    }
-                        Text(
-                        text = "$daysUntilBirthday dní",
-                        style = MaterialTheme.typography.headlineMedium,
-                        modifier = Modifier
-                            .align(Alignment.Center)
-                            .padding(vertical = 16.dp),
-                            textAlign = TextAlign.Center
-                        )
-                }
-            },
-            confirmButton = {
-                Button(onClick = { 
-                    showBirthdayDialog = false
-                    showConfetti = false
-                }) {
-                            Text("Zavřít")
-                        }
-                    }
-        )
-    }
-}
-
-@Composable
-fun TroopsScreen() {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        item {
-            Text(
-                "Oddílová rada",
-                style = MaterialTheme.typography.headlineMedium,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-            
-            Text(
-                "Vedoucí oddílu: Pavel Balda",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-            
-            Text(
-                "Zástupce vedoucího oddílu: František Verner",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-            
-            Text(
-                "Rádci oddílu:",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-            
-            Column(modifier = Modifier.padding(start = 16.dp, bottom = 24.dp)) {
-                listOf(
-                    "Štěpán Brožek", "Martin Kuchta", "David Hroch",
-                    "Zdeněk Strach", "Jan Jirka - \"Hřebík\"", "Jan Holý",
-                    "Adam Dejmal", "David Pop - \"Dave\"", "Antonín Mik - \"Korýš\"",
-                    "Tomáš Náhlík - \"Jonatán\"", "Matouš Buldra", "Oskar Buben",
-                    "Jan Lotschar"
-                ).forEach { name ->
-                    Text(
-                        name,
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.padding(vertical = 2.dp)
-                    )
-                }
-            }
-
-            // Vlčácké družiny
-            listOf(
-                Triple("Vlčácká družina - Tyrkysová šestka", 
-                       "Pondělí 17:30 - 19:00, Klubovna - Jiráskovo Náměstí",
-                       listOf("Štěpán Brožek", "Martin Kuchta")),
-                Triple("Vlčácká družina - Orlí šestka",
-                       "Úterý 17:30 - 19:00, Klubovna - Jiráskovo Náměstí",
-                       listOf("Jan Jirka - \"Hřebík\"", "Jan Holý", "Adam Dejmal")),
-                Triple("Vlčácká družina - Dračí šestka",
-                       "Pondělí 16:00 - 17:30, Klubovna - Jiráskovo Náměstí",
-                       listOf("Matouš Buldra", "Oskar Buben", "Jan Lontschar"))
-            ).forEach { (name, time, leaders) ->
-                TroopCard(name, time, leaders)
-            }
-
-            // Skautské družiny
-            listOf(
-                Triple("Skautská družina - Vlci",
-                       "Pondělí 16:30 - 18:00, Klubovna - Sušická 92",
-                       listOf("David Hroch", "Zdeněk Strach")),
-                Triple("Skautská družina - Sloníři",
-                       "Středa 17:00 - 18:30, Klubovna - Sušická 92",
-                       listOf("David Pop - \"Dave\"", "Antonín Mik - \"Korýš\"", "Tomáš Náhlík - \"Jonatán\""))
-            ).forEach { (name, time, leaders) ->
-                TroopCard(name, time, leaders)
-            }
-
-            // Družina mladších vedoucích
-            TroopCard(
-                "Družina mladších vedoucích - Nutrie",
-                "Pondělí 18:30 - 20:00",
-                emptyList()
-            )
-        }
-    }
-}
-
-@Composable
-private fun TroopCard(name: String, time: String, leaders: List<String>) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Text(
-                name,
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-            Text(
-                time,
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(bottom = if (leaders.isEmpty()) 0.dp else 8.dp)
-            )
-            if (leaders.isNotEmpty()) {
-                Text(
-                    "Rádcové:",
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(bottom = 4.dp)
-                )
-                leaders.forEach { leader ->
-                    Text(
-                        leader,
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 2.dp)
-                    )
-                }
-            }
-        }
-    }
-}
-
 @Preview(showBackground = true)
 @Composable
 fun MainScreenPreview() {
     MainScreen(false, {})
-}
-
-@Composable
-fun BirthdayConfetti() {
-    val particles = remember { mutableStateListOf<Particle>() }
-    val infiniteTransition = rememberInfiniteTransition()
-    
-    LaunchedEffect(Unit) {
-        repeat(50) {
-            particles.add(
-                Particle(
-                    x = Random.nextFloat() * 1000f,
-                    y = Random.nextFloat() * -800f,
-                    color = listOf(
-                        Color(0xFFFF1744),  // Červená
-                        Color(0xFFFFD700),  // Zlatá
-                        Color(0xFF00E676),  // Zelená
-                        Color(0xFF2979FF),  // Modrá
-                        Color(0xFFFF4081),  // Růžová
-                        Color(0xFFFFEB3B),  // Žlutá
-                        Color(0xFF9C27B0),  // Fialová
-                        Color(0xFF00BCD4)   // Tyrkysová
-                    ).random(),
-                    speed = Random.nextFloat() * 1f + 0.5f,
-                    size = Random.nextFloat() * 4f + 2f,
-                    angle = Random.nextFloat() * 360f
-                )
-            )
-        }
-    }
-
-    val animatedPosition by infiniteTransition.animateFloat(
-        initialValue = -800f,
-        targetValue = 800f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(4000, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        )
-    )
-
-    val rotationAnimation by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 360f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(6000, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        )
-    )
-
-    Canvas(modifier = Modifier.fillMaxSize()) {
-        particles.forEach { particle ->
-            val yPos = (particle.y + (animatedPosition * particle.speed)) % (size.height + 800f)
-            val xPos = (particle.x + sin(rotationAnimation * PI.toFloat() / 180f).toFloat() * 20f * cos(yPos / 100f).toFloat()) % size.width
-            
-            withTransform({
-                translate(
-                    left = if (xPos < 0f) size.width + xPos else xPos,
-                    top = if (yPos < 0f) size.height + yPos else yPos
-                )
-                rotate(particle.angle + rotationAnimation / 2f)
-            }) {
-            drawCircle(
-                    color = particle.color.copy(alpha = 0.9f),
-                    radius = particle.size,
-                    center = Offset(0f, 0f))
-            }
-        }
-    }
-}
-
-// Upravená data třída pro částice s novými vlastnostmi
-private data class Particle(
-    val x: Float,
-    val y: Float,
-    val color: Color,
-    val speed: Float,
-    val size: Float,
-    val angle: Float
-)
-
-// Funkce pro přidání událostí do Firebase
-private fun addEventsToFirebase() {
-    val database = FirebaseDatabase.getInstance()
-    val eventsRef = database.getReference("events")
-    
-    val events = listOf(
-        Event(
-            name = "Fénix víkend",
-            date = "6.9.2024",
-            participants = "Fénix vedoucí",
-            eventDate = "2024-09-06"
-        ),
-        Event(
-            name = "Pardské přespání",
-            date = "6.9.2024 - 7.9.2024",
-            participants = "Pardi vedoucí",
-            eventDate = "2024-09-06"
-        ),
-        // ... další události
-    )
-    
-    events.forEach { event ->
-        eventsRef.push().setValue(event)
-    }
-}
-
-private val skautFont = FontFamily(
-    Font(R.font.skaut, FontWeight.Normal)
-)
-
-private val DarkColorScheme = darkColorScheme()
-private val LightColorScheme = lightColorScheme() 
+} 

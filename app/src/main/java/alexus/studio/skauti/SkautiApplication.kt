@@ -58,8 +58,6 @@ class SkautiApplication : Application() {
             Log.e("Firebase", "Chyba při inicializaci Firebase: ${e.message}")
             e.printStackTrace()
         }
-
-        createNotificationChannel()
     }
 
     private fun setupEventsListener(database: FirebaseDatabase) {
@@ -69,9 +67,6 @@ class SkautiApplication : Application() {
                 event?.let {
                     if (!lastKnownEvents.containsKey(snapshot.key)) {
                         lastKnownEvents[snapshot.key ?: ""] = it
-                        if (it.registrationEnabled && !it.registrationLink.isNullOrEmpty()) {
-                            showNotification("Nová možnost přihlášení", "Byla přidána možnost přihlášení na událost: ${it.name}")
-                        }
                     }
                 }
             }
@@ -79,16 +74,6 @@ class SkautiApplication : Application() {
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
                 val event = snapshot.getValue(Event::class.java)
                 event?.let {
-                    val oldEvent = lastKnownEvents[snapshot.key]
-                    // Commenting out the notification logic
-                    /*
-                    if (oldEvent?.registrationLink != it.registrationLink && 
-                        it.registrationEnabled && 
-                        !it.registrationLink.isNullOrEmpty()
-                    ) {
-                        showNotification("Aktualizace přihlašování", "Byl přidán odkaz na přihlášení pro událost: ${it.name}")
-                    }
-                    */
                     lastKnownEvents[snapshot.key ?: ""] = it
                 }
             }
@@ -102,38 +87,6 @@ class SkautiApplication : Application() {
                 Log.e("Firebase", "Chyba při sledování událostí: ${error.message}")
             }
         })
-    }
-
-    private fun showNotification(title: String, message: String) {
-        // Kontrola, zda máme povolení k zobrazení oznámení
-        if (!NotificationManagerCompat.from(this).areNotificationsEnabled()) {
-            Log.d("Notifications", "Oznámení nejsou povolena")
-            return
-        }
-
-        val notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentTitle(title)
-            .setContentText(message)
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setAutoCancel(true)
-
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
-    }
-
-    private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "Události"
-            val descriptionText = "Notifikace o nových událostech"
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
-                description = descriptionText
-            }
-            
-            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
-        }
     }
 }
 
