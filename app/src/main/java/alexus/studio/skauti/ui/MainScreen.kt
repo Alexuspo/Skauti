@@ -351,6 +351,12 @@ class EventViewModel : ViewModel() {
     fun getUpdateUrl(): String {
         return GITHUB_RELEASE_URL
     }
+
+    fun resetAuthentication() {
+        val sharedPrefs = application?.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        sharedPrefs?.edit()?.putBoolean("is_authenticated", false)?.apply()
+        _isAuthenticated.value = false
+    }
 }
 
 @Composable
@@ -802,6 +808,13 @@ fun MainScreen(
                                 text = { Text("O aplikaci") },
                                 onClick = { 
                                     showAboutDialog = true
+                                    showMenu = false
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Reset přihlášení") },
+                                onClick = { 
+                                    viewModel.resetAuthentication()
                                     showMenu = false
                                 }
                             )
